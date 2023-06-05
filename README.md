@@ -1,0 +1,1 @@
+Extract the "MouPass" folder into the "AndroidStudioProjects" directory on your computer.
