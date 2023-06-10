@@ -1,0 +1,30 @@
+6/6/2023 6:35AM
+Registration Form Design
+Info Button
+Password Field Input Validation(>8 char, capital letter, alphanumeric)
+Password Visible Button
+
+Create App Logo (Brown Black Theme)
+Replace TextView "Register" with Logo on registration page
+Update txtConfirmPass to TextInputLayout
+Update MainActivity code from edit text -> TextInputLayout
+Test if Input Validation works
+
+App Theme Brown Black
+
+
+12/6/2023 10:23am
+**Android Manifests**
+Locked screen orientation to portrait in android manifests
+Changed Intent filter from .MainActivity to .Splash
+
+**Splash Screen**
+Added Splash Screen
+
+**Fragment_Home**
+Update Pass & CPass txt field
+Changed lblregister to logo
+
+**Pending**
+Try Refactor Fragment Home to Fragment Register
+Forgot Password Link

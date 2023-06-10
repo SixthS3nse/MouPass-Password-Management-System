@@ -1,6 +1,8 @@
 package com.example.moupass;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.service.controls.actions.FloatAction;
 import android.view.View;
 import android.view.Menu;
@@ -22,6 +24,9 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.moupass.databinding.ActivityMainBinding;
+import com.google.android.material.textfield.TextInputLayout;
+
+import org.w3c.dom.Text;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -30,23 +35,27 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        //App Launch
         super.onCreate(savedInstanceState);
 
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        EditText password = (EditText) findViewById(R.id.txtMasterPass);
-        EditText cpassword = (EditText) findViewById(R.id.txtConfirmPass);
+        //Register Variable
+        TextInputLayout password = (TextInputLayout) findViewById(R.id.txtMasterPass);
+        TextInputLayout cpassword = (TextInputLayout) findViewById(R.id.txtConfirmPass);
 
         MaterialButton register = (MaterialButton) findViewById(R.id.btnRegister);
+
         FloatingActionButton info = (FloatingActionButton) findViewById(R.id.btnInfo);
 
+        //Register Page Input Validation
         register.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(password.getText().toString().equals(cpassword.getText().toString())) {
+                if(password.getEditText().getText().toString().equals(cpassword.getEditText().getText().toString())) {
                     //Passphrase Input Validation - Call Method
-                    PasswordValidation(password.getText().toString());
+                    PasswordValidation(password.getEditText().getText().toString());
                 }else
                     //Prompt Password Not Same
                     Toast.makeText(MainActivity.this,"Confirm Password is incorrect",Toast.LENGTH_SHORT).show();
@@ -54,6 +63,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        //Information Button
         info.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -62,6 +72,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
     }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -76,6 +87,8 @@ public class MainActivity extends AppCompatActivity {
         return NavigationUI.navigateUp(navController, mAppBarConfiguration)
                 || super.onSupportNavigateUp();
     }
+
+    //Password Requirements
     private int PasswordRequirements(String password) {
         // Check if password has more than 8 characters
         if (password.length() < 8) {
@@ -95,6 +108,8 @@ public class MainActivity extends AppCompatActivity {
         // Password meets all requirements
         return 0;
     }
+
+    //Password Validation
     private void PasswordValidation(String password) {
 /*        // Check if password fulfill the requirements
         if (password.length() < 8) {
