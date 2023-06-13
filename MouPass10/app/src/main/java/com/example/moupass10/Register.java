@@ -1,5 +1,6 @@
 package com.example.moupass10;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -30,31 +31,62 @@ public class Register extends AppCompatActivity {
 
     private AppBarConfiguration mAppBarConfiguration;
 
+    private TextInputLayout txtMasterPass;
+    private TextInputLayout txtConfirmPass;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         //App Launch
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
-        //Register Variable
-        TextInputLayout password = (TextInputLayout) findViewById(R.id.txtMasterPass);
-        TextInputLayout cpassword = (TextInputLayout) findViewById(R.id.txtConfirmPass);
+        txtMasterPass = findViewById(R.id.txtMasterPass);
+        txtConfirmPass = findViewById(R.id.txtConfirmPass);
 
         MaterialButton register = (MaterialButton) findViewById(R.id.btnRegister);
-
         FloatingActionButton info = (FloatingActionButton) findViewById(R.id.btnInfo);
 
         //Register Page Input Validation
         register.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(password.getEditText().getText().toString().equals(cpassword.getEditText().getText().toString())) {
-                    //Passphrase Input Validation - Call Method
-                    PasswordValidation(password.getEditText().getText().toString());
-                }else
-                    //Prompt Password Not Same
-                    Toast.makeText(Register.this,"Confirm Password is incorrect",Toast.LENGTH_SHORT).show();
+                String masterPass = txtMasterPass.getEditText().getText().toString();
+                String confirmPass = txtConfirmPass.getEditText().getText().toString();
+                int result = PasswordRequirements(masterPass);
 
+                if (!masterPass.isEmpty() && masterPass.equals(confirmPass)) {
+                    switch (result) {
+                        case 0:
+                            // Generate random encryption key
+                            byte[] encryptionKey = generateEncryptionKey();
+
+                            // Encrypt the passwords
+                            byte[] encryptedMasterPass = encrypt(masterPass, encryptionKey);
+                            byte[] encryptedConfirmPass = encrypt(confirmPass, encryptionKey);
+
+                            // Save encrypted passwords to CSV file
+                            if (saveToCSV(getApplicationContext(), encryptedMasterPass, encryptedConfirmPass)) {
+                                Toast.makeText(Register.this, "Passwords saved successfully.", Toast.LENGTH_SHORT).show();
+                            } else {
+                                Toast.makeText(Register.this, "Error saving password!.", Toast.LENGTH_SHORT).show();
+                            }
+
+                            //Redirect to Next Page
+                            startActivity(new Intent(Register.this,Recovery.class));
+                            break;
+                        case 1:
+                            Toast.makeText(Register.this, "Password must have more than 8 characters", Toast.LENGTH_SHORT).show();
+                            break;
+                        case 2:
+                            Toast.makeText(Register.this, "Password must contain at least one uppercase letter", Toast.LENGTH_SHORT).show();
+                            break;
+                        case 3:
+                            Toast.makeText(Register.this, "Password must be alphanumeric", Toast.LENGTH_SHORT).show();
+                            break;
+                    }
+                } else {
+                    Toast.makeText(Register.this, "Incorrect confirm password or no password in entered", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
@@ -89,18 +121,20 @@ public class Register extends AppCompatActivity {
         return 0;
     }
 
-    //Password Validation
+ /*       //Password Validation
     private void PasswordValidation(String password) {
         int result = PasswordRequirements(password);
 
         switch (result){
             case 0:
+                //Display Success Message
                 Toast.makeText(Register.this,"Registered",Toast.LENGTH_SHORT).show();
-                //Shared Preferences
-                SharedPreferences.Editor editor = getSharedPreferences("Shared", MODE_PRIVATE).edit();
+
+*//*                //Shared Preferences
+                SharedPreferences.Editor editor = getSharedPreferences("PrefsStatus", MODE_PRIVATE).edit();
                 editor.putBoolean("userRegistered", true);
-                editor.apply();
-                //Store Master Password into file
+                editor.apply();*//*
+
                 //Redirect to Backup Page
                 startActivity(new Intent(Register.this,Recovery.class));
                 break;
@@ -115,9 +149,60 @@ public class Register extends AppCompatActivity {
                 break;
         }
 
-    }
+    }*/
 
     //Storing Password into txt file
+    private byte[] generateEncryptionKey() {
+        try {
+            KeyGenerator keyGenerator = KeyGenerator.getInstance("AES");
+            keyGenerator.init(256, new SecureRandom());
+            SecretKey secretKey = keyGenerator.generateKey();
+            return secretKey.getEncoded();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    private byte[] encrypt(String password, byte[] encryptionKey) {
+        try {
+            SecretKeySpec keySpec = new SecretKeySpec(encryptionKey, "AES");
+            Cipher cipher = Cipher.getInstance("AES");
+            cipher.init(Cipher.ENCRYPT_MODE, keySpec);
+            return cipher.doFinal(password.getBytes());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    private boolean saveToCSV(Context context, byte[] encryptedMasterPass, byte[] encryptedConfirmPass) {
+        try {
+            // Convert encrypted passwords to Base64 strings
+            String base64MasterPass = Base64.encodeToString(encryptedMasterPass, Base64.DEFAULT);
+            String base64ConfirmPass = Base64.encodeToString(encryptedConfirmPass, Base64.DEFAULT);
+
+            // Concatenate the encrypted passwords
+            String csvData = base64MasterPass + "," + base64ConfirmPass + "\n";
+
+            // Create a file stream for writing
+            FileOutputStream fos = context.openFileOutput("passwords.csv", Context.MODE_PRIVATE);
+            OutputStreamWriter osw = new OutputStreamWriter(fos);
+
+            // Write the encrypted passwords to the CSV file
+            osw.write(csvData);
+
+            // Close the file stream
+            osw.close();
+            fos.close();
+
+            return true;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
 }
+
 
 
