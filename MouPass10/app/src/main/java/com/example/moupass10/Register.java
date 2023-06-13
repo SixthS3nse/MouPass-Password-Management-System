@@ -1,9 +1,10 @@
 package com.example.moupass10;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
-
+import android.content.SharedPreferences;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -11,6 +12,19 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.textfield.TextInputLayout;
+
+import android.os.Environment;
+import android.util.Base64;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.security.SecureRandom;
+
+import javax.crypto.Cipher;
+import javax.crypto.KeyGenerator;
+import javax.crypto.SecretKey;
+import javax.crypto.spec.SecretKeySpec;
 
 public class Register extends AppCompatActivity {
 
@@ -77,22 +91,18 @@ public class Register extends AppCompatActivity {
 
     //Password Validation
     private void PasswordValidation(String password) {
-/*        // Check if password fulfill the requirements
-        if (password.length() < 8) {
-            Toast.makeText(MainActivity.this,"Password must have more than 8 alphanumeric with capital letter",Toast.LENGTH_LONG).show();
-            return;
-        } else {
-            Toast.makeText(MainActivity.this, "Registered", Toast.LENGTH_SHORT).show();
-            //Proceed to next form
-        }*/
         int result = PasswordRequirements(password);
 
         switch (result){
             case 0:
                 Toast.makeText(Register.this,"Registered",Toast.LENGTH_SHORT).show();
+                //Shared Preferences
+                SharedPreferences.Editor editor = getSharedPreferences("Shared", MODE_PRIVATE).edit();
+                editor.putBoolean("userRegistered", true);
+                editor.apply();
                 //Store Master Password into file
                 //Redirect to Backup Page
-                setContentView(R.layout.activity_recovery);
+                startActivity(new Intent(Register.this,Recovery.class));
                 break;
             case 1:
                 Toast.makeText(Register.this,"Password must have more than 8 characters",Toast.LENGTH_SHORT).show();
