@@ -62,13 +62,20 @@ public class Register extends AppCompatActivity {
 
                             // Encrypt the passwords
                             byte[] encryptedMasterPass = encrypt(masterPass, encryptionKey);
-                            byte[] encryptedConfirmPass = encrypt(confirmPass, encryptionKey);
+                            //byte[] encryptedConfirmPass = encrypt(confirmPass, encryptionKey);
 
                             // Save encrypted passwords to CSV file
-                            if (saveToCSV(getApplicationContext(), encryptedMasterPass, encryptedConfirmPass)) {
+                            if (saveToCSV(getApplicationContext(), encryptedMasterPass)) {
                                 Toast.makeText(Register.this, "Passwords saved successfully.", Toast.LENGTH_SHORT).show();
                             } else {
                                 Toast.makeText(Register.this, "Error saving password!.", Toast.LENGTH_SHORT).show();
+                            }
+
+                            // Save encrypted Key to CSV file
+                            if (saveKey(getApplicationContext(), encryptionKey)) {
+                                Toast.makeText(Register.this, "Key saved successfully.", Toast.LENGTH_SHORT).show();
+                            } else {
+                                Toast.makeText(Register.this, "Error saving Key!.", Toast.LENGTH_SHORT).show();
                             }
 
                             //Redirect to Next Page
@@ -139,7 +146,7 @@ public class Register extends AppCompatActivity {
                 startActivity(new Intent(Register.this,Recovery.class));
                 break;
             case 1:
-                Toast.makeText(Register.this,"Password must have more than 8 characters",Toast.LENGTH_SHORT).show();
+                Toast.makeText(Register.this,"Password must have moe than 8 characters",Toast.LENGTH_SHORT).show();
                 break;
             case 2:
                 Toast.makeText(Register.this,"Password must contain at least one uppercase letter",Toast.LENGTH_SHORT).show();
@@ -176,17 +183,44 @@ public class Register extends AppCompatActivity {
         return null;
     }
 
-    private boolean saveToCSV(Context context, byte[] encryptedMasterPass, byte[] encryptedConfirmPass) {
+    private boolean saveToCSV(Context context, byte[] encryptedMasterPass) {
         try {
             // Convert encrypted passwords to Base64 strings
             String base64MasterPass = Base64.encodeToString(encryptedMasterPass, Base64.DEFAULT);
-            String base64ConfirmPass = Base64.encodeToString(encryptedConfirmPass, Base64.DEFAULT);
+            //String base64ConfirmPass = Base64.encodeToString(encryptedConfirmPass, Base64.DEFAULT);
+            //String base64EncryptionKey = Base64.encodeToString(encryptionKey,Base64.DEFAULT);
 
             // Concatenate the encrypted passwords
-            String csvData = base64MasterPass + "," + base64ConfirmPass + "\n";
+            String csvData = base64MasterPass + "\n";
 
             // Create a file stream for writing
-            FileOutputStream fos = context.openFileOutput("passwords.csv", Context.MODE_PRIVATE);
+            FileOutputStream fos = context.openFileOutput("p@ssw0rds.snf", Context.MODE_PRIVATE);
+            OutputStreamWriter osw = new OutputStreamWriter(fos);
+
+            // Write the encrypted passwords to the CSV file
+            osw.write(csvData);
+
+            // Close the file stream
+            osw.close();
+            fos.close();
+
+            return true;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    private boolean saveKey(Context context, byte [] encryptionKey) {
+        try {
+            // Convert encrypted Key to Base64 strings
+            String base64EncryptionKey = Base64.encodeToString(encryptionKey,Base64.DEFAULT);
+
+            // Concatenate the encrypted passwords
+            String csvData = base64EncryptionKey + "\n";
+
+            // Create a file stream for writing
+            FileOutputStream fos = context.openFileOutput("k3y.snf", Context.MODE_PRIVATE);
             OutputStreamWriter osw = new OutputStreamWriter(fos);
 
             // Write the encrypted passwords to the CSV file

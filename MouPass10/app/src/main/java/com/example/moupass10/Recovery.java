@@ -2,12 +2,16 @@ package com.example.moupass10;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
+import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import android.content.Context;
 import android.os.Bundle;
 import android.util.Base64;
+
+import com.google.android.material.button.MaterialButton;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -21,10 +25,12 @@ public class Recovery extends AppCompatActivity {
     private static final int CODE_LENGTH = 8;
     private static final int NUM_CODES = 1;
     private static final String CHARSET = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-    private static final String CSV_FILENAME = "rec0v3ry_c0des.csv";
+    private static final String CSV_FILENAME = "rec0v3ry_c0des.snf";
 
     private TextView txtCode1;
     private TextView txtCode2;
+
+    private MaterialButton btnProceed;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +42,16 @@ public class Recovery extends AppCompatActivity {
 
         // Generate and save recovery codes
         GenerateSaveCodes(getApplicationContext());
+
+        //Proceed Button
+        btnProceed = findViewById(R.id.btnProceed);
+
+        btnProceed.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(Recovery.this,Login.class));
+            }
+        });
     }
 
     private void GenerateSaveCodes(Context context) {
