@@ -13,7 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="50dp"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="150dp"
         android:layout_marginEnd="50dp"
         android:layout_marginBottom="50dp"
         android:gravity="center"
@@ -39,28 +39,11 @@
         android:textStyle="bold"
         />
 
-    <TextView
-        android:id="@+id/txtCode2"
-        android:layout_width="300dp"
-        android:layout_height="50dp"
-        android:layout_below="@+id/txtCode1"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="50dp"
-        android:layout_marginEnd="10dp"
-        android:layout_marginBottom="10dp"
-        android:layout_centerHorizontal="true"
-        android:background="@drawable/border"
-        android:textColor="@color/white"
-        android:inputType="text"
-        android:gravity="center"
-        android:textStyle="bold"
-        />
-
     <com.google.android.material.button.MaterialButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/btnProceed"
-        android:layout_below="@+id/txtCode2"
+        android:layout_below="@+id/txtCode1"
         android:text="PROCEED"
         android:backgroundTint="@color/txtBgGrey"
         android:layout_centerHorizontal="true"

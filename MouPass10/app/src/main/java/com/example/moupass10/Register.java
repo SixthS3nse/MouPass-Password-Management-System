@@ -26,10 +26,12 @@ import javax.crypto.Cipher;
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
+import android.content.SharedPreferences;
 
 public class Register extends AppCompatActivity {
 
-    private AppBarConfiguration mAppBarConfiguration;
+    private static final String PREFS_NAME = "PrefsStatus";
+    private static final String KEY_REGISTERED = "userRegistered";
 
     private TextInputLayout txtMasterPass;
     private TextInputLayout txtConfirmPass;
@@ -66,17 +68,20 @@ public class Register extends AppCompatActivity {
 
                             // Save encrypted passwords to CSV file
                             if (saveToCSV(getApplicationContext(), encryptedMasterPass)) {
-                                Toast.makeText(Register.this, "Passwords saved successfully.", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(Register.this, "Registered", Toast.LENGTH_SHORT).show();
                             } else {
-                                Toast.makeText(Register.this, "Error saving password!.", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(Register.this, "⚠️Error saving password!⚠️", Toast.LENGTH_SHORT).show();
                             }
 
                             // Save encrypted Key to CSV file
                             if (saveKey(getApplicationContext(), encryptionKey)) {
-                                Toast.makeText(Register.this, "Key saved successfully.", Toast.LENGTH_SHORT).show();
+                                //Toast.makeText(Register.this, "Key saved successfully.", Toast.LENGTH_SHORT).show();
                             } else {
-                                Toast.makeText(Register.this, "Error saving Key!.", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(Register.this, "⚠️Error saving Key!⚠️", Toast.LENGTH_SHORT).show();
                             }
+
+                            //Save Registration Status
+                            saveRegistrationStatus();
 
                             //Redirect to Next Page
                             startActivity(new Intent(Register.this,Recovery.class));
@@ -127,36 +132,6 @@ public class Register extends AppCompatActivity {
         // Password meets all requirements
         return 0;
     }
-
- /*       //Password Validation
-    private void PasswordValidation(String password) {
-        int result = PasswordRequirements(password);
-
-        switch (result){
-            case 0:
-                //Display Success Message
-                Toast.makeText(Register.this,"Registered",Toast.LENGTH_SHORT).show();
-
-*//*                //Shared Preferences
-                SharedPreferences.Editor editor = getSharedPreferences("PrefsStatus", MODE_PRIVATE).edit();
-                editor.putBoolean("userRegistered", true);
-                editor.apply();*//*
-
-                //Redirect to Backup Page
-                startActivity(new Intent(Register.this,Recovery.class));
-                break;
-            case 1:
-                Toast.makeText(Register.this,"Password must have moe than 8 characters",Toast.LENGTH_SHORT).show();
-                break;
-            case 2:
-                Toast.makeText(Register.this,"Password must contain at least one uppercase letter",Toast.LENGTH_SHORT).show();
-                break;
-            case 3:
-                Toast.makeText(Register.this,"Password must be alphanumeric",Toast.LENGTH_SHORT).show();
-                break;
-        }
-
-    }*/
 
     //Storing Password into txt file
     private byte[] generateEncryptionKey() {
@@ -235,6 +210,12 @@ public class Register extends AppCompatActivity {
             e.printStackTrace();
         }
         return false;
+    }
+    private void saveRegistrationStatus() {
+        SharedPreferences preferences = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putBoolean(KEY_REGISTERED, true);
+        editor.apply();
     }
 }
 

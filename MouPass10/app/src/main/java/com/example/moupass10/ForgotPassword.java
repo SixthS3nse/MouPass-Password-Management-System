@@ -4,57 +4,51 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.AssetManager;
 import android.os.Bundle;
-import android.util.Log;
+import android.util.Base64;
 import android.view.View;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.moupass10.ui.home.HomeFragment;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputLayout;
 
-import org.w3c.dom.Text;
+import android.content.Context;
+import android.widget.Toast;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.security.Key;
-import android.util.Base64;
 
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
 
-public class Login extends AppCompatActivity {
+public class ForgotPassword extends AppCompatActivity {
+
+    private TextInputLayout txtCode1;
 
     private static final String ENCRYPTION_ALGORITHM = "AES";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
+        setContentView(R.layout.activity_forgot_password);
 
-        MaterialButton login = (MaterialButton) findViewById(R.id.btnLogin);
-        TextInputLayout txtMasterPass = (TextInputLayout) findViewById(R.id.txtMasterPass);
+        txtCode1 = findViewById(R.id.txtRecoveryCode1);
+
+        MaterialButton confirm = (MaterialButton) findViewById(R.id.btnConfirm);
         FloatingActionButton info = (FloatingActionButton) findViewById(R.id.btnInfo);
-        TextView forgot = (TextView) findViewById(R.id.lblForgotPass);
 
-        String MasterPassword = txtMasterPass.getEditText().getText().toString();
-
-        login.setOnClickListener(new View.OnClickListener() {
-            //int result = PasswordRequirements(MasterPassword);
-            private String txtMasterPass;
-            TextInputLayout MasterPass = (TextInputLayout) findViewById(R.id.txtMasterPass);
-
+        confirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // Read the encryption key from the key file
-                byte[] encryptionKey = readEncryptionKeyFromFile("/data/data/com.example.moupass10/files/k3y.snf");
+                byte[] encryptionKey = readEncryptionKeyFromFile("/data/data/com.example.moupass10/files/k3y2.snf");
 
                 // Read the encrypted content from the file
-                byte[] encryptedContent = readEncryptedContentFromFile("/data/data/com.example.moupass10/files/p@ssw0rds.snf");
+                byte[] encryptedContent = readEncryptedContentFromFile("/data/data/com.example.moupass10/files/r3c0v3ry.snf");
 
                 // Decrypt the content
                 byte[] decryptedContent = decrypt(encryptedContent, encryptionKey);
@@ -64,59 +58,21 @@ public class Login extends AppCompatActivity {
                     String decryptedText = new String(decryptedContent);
 
                     // Perform login validation using the decrypted text // if else function
-                    if (MasterPass.getEditText().getText().toString().equals(decryptedText)) {
-                        //Print Login Successful
-                        Toast.makeText(Login.this, "Login Successful", Toast.LENGTH_SHORT).show();
-                        //Redirect to next page
-                        startActivity(new Intent(Login.this, MainActivity.class));
+                    if (txtCode1.getEditText().getText().toString().equals(decryptedText)) {
+                        // Codes match, display a success message
+                        Toast.makeText(ForgotPassword.this, "Account recovered successfully!", Toast.LENGTH_SHORT).show();
+
+                        //Redirect to Next Page
+                        startActivity(new Intent(ForgotPassword.this,MainActivity.class));
                     } else {
                         //Print Login Failed
-                        Toast.makeText(Login.this, "Login Failed", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(ForgotPassword.this, "Invalid recovery codes!", Toast.LENGTH_SHORT).show();
                     }
                 }
             }
         });
-
-        //Information Button
-        info.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(Login.this,"⚠️Click on Forgot Password for account recovery⚠️",Toast.LENGTH_LONG).show();
-            }
-        });
-
-        //Forgot Password
-        forgot.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(Login.this, ForgotPassword.class));
-            }
-        });
-
     }
 
-
-/*
-    private int PasswordRequirements(String password) {
-        // Check if password has more than 8 characters
-        if (password.length() < 8) {
-            return 1;
-        }
-
-        // Check if password has at least one uppercase letter
-        if (!password.matches(".*[A-Z].*")) {
-            return 2;
-        }
-
-        // Check if password is alphanumeric
-        if (!password.matches("[a-zA-Z0-9]*")) {
-            return 3;
-        }
-
-        // Password meets all requirements
-        return 0;
-    }
-*/
 
     private static byte[] readEncryptionKeyFromFile(String filename) {
         try {
