@@ -10,4 +10,5 @@
     <color name="bgBlack">#29282B</color>
     <color name="txtBgGrey">#303030</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="mainTheme">#e3a72f</color>
 </resources>
