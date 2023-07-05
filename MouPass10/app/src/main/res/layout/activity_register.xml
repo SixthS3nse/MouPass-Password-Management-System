@@ -47,7 +47,7 @@
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Master Password"
+            android:hint="@string/res_master"
             android:autofillHints="Master Password"
             android:background="@color/txtBgGrey"
             android:drawableStart="@drawable/baseline_password_24"
@@ -80,7 +80,7 @@
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Confirm Password"
+            android:hint="@string/res_confirm"
             android:autofillHints="Confirm Password"
             android:background="@color/txtBgGrey"
             android:drawableStart="@drawable/baseline_password_24"
@@ -100,7 +100,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/btnRegister"
         android:layout_below="@+id/txtConfirmPass"
-        android:text="REGISTER"
+        android:text="@string/res_register"
         android:backgroundTint="@color/txtBgGrey"
         android:layout_centerHorizontal="true"
         android:layout_margin="50dp"

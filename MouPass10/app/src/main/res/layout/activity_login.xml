@@ -47,7 +47,7 @@
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Master Password"
+            android:hint="@string/res_master"
             android:autofillHints="Master Password"
             android:background="@color/txtBgGrey"
             android:drawableStart="@drawable/baseline_password_24"
@@ -73,7 +73,7 @@
         android:layout_marginBottom="20dp"
         android:backgroundTint="@color/txtBgGrey"
         android:clickable="true"
-        android:text="LOGIN" />
+        android:text="@string/res_login" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/btnInfo"
@@ -87,16 +87,18 @@
         app:srcCompat="@drawable/baseline_info_24" />
 
     <TextView
+        android:id="@+id/lblForgotPass"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/lblForgotPass"
         android:layout_below="@+id/txtMasterPass"
-        android:text="Forgot Password?"
-        android:textColor="@color/white"
         android:layout_centerHorizontal="true"
-        android:layout_margin="30dp"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginEnd="30dp"
+        android:layout_marginBottom="30dp"
         android:clickable="true"
-        />
+        android:text="@string/res_forgot"
+        android:textColor="@color/white" />
 
 
 </RelativeLayout>

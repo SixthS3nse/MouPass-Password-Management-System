@@ -10,6 +10,11 @@
             android:title="@string/menu_home" />
 
         <item
+            android:id="@+id/nav_dash"
+            android:icon="@drawable/baseline_home_24"
+            android:title="@string/menu_dash" />
+
+        <item
             android:id="@+id/nav_generator"
             android:icon="@drawable/baseline_autorenew_24"
             android:title="@string/menu_generator" />
@@ -18,14 +23,13 @@
             android:id="@+id/nav_detector"
             android:icon="@drawable/baseline_search_24"
             android:title="@string/menu_detector" />
+    </group>
 
+    <group android:checkableBehavior="single">
         <item
-            android:id="@+id/nav_gallery"
-            android:icon="@drawable/ic_menu_gallery"
-            android:title="@string/menu_gallery" />
-        <item
-            android:id="@+id/nav_slideshow"
-            android:icon="@drawable/ic_menu_slideshow"
-            android:title="@string/menu_slideshow" />
+            android:id="@+id/nav_settings"
+            android:icon="@drawable/baseline_settings_24"
+            android:title="@string/menu_settings" >
+        </item>
     </group>
 </menu>

@@ -7,12 +7,36 @@
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Settings</string>
 
+    <!--Menu Strings-->
     <string name="menu_home">Home</string>
     <string name="menu_gallery">Gallery</string>
     <string name="menu_slideshow">Slideshow</string>
     <string name="menu_settings">Settings</string>
     <string name="menu_generator">Passphrase Generator</string>
     <string name="menu_detector">Passphrase Detector</string>
+    <string name="menu_form">Form</string>
+    <string name="menu_dash">Dashboard</string>
+
+    <string name="empty_list">NO DATA ON RECORD</string>
+
+    <!--Login/Register Strings-->
+    <string name="res_master">Master Password</string>
+    <string name="res_confirm">Confirm Password</string>
+    <string name="res_login">LOGIN</string>
+    <string name="res_register">REGISTER</string>
+    <string name="res_forgot">Forgot Password?</string>
+
+    <!--Form Strings-->
+    <string name="form_title">Title</string>
+    <string name="form_username">Username</string>
+    <string name="form_password">Password</string>
+    <string name="form_website">Website</string>
+    <string name="form_confirm">Confirm</string>
+
+<!--    &lt;!&ndash;List Item Strings&ndash;&gt;
+    <string name="list_title">Confirm</string>
+    <string name="lists1_website">www.facebook.com</string>-->
+
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 

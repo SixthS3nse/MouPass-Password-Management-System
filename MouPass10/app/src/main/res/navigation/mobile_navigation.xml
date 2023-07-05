@@ -12,6 +12,12 @@
         tools:layout="@layout/fragment_home" />
 
     <fragment
+        android:id="@+id/nav_dash"
+        android:name="com.example.moupass10.ui.dashboard.DashboardFragment"
+        android:label="@string/menu_dash"
+        tools:layout="@layout/fragment_dashboard" />
+
+    <fragment
         android:id="@+id/nav_generator"
         android:name="com.example.moupass10.ui.generator.GeneratorFragment"
         android:label="@string/menu_generator"
@@ -24,15 +30,10 @@
         tools:layout="@layout/fragment_detector" />
 
     <fragment
-        android:id="@+id/nav_gallery"
-        android:name="com.example.moupass10.ui.gallery.GalleryFragment"
-        android:label="@string/menu_gallery"
-        tools:layout="@layout/fragment_gallery" />
+        android:id="@+id/nav_form"
+        android:name="com.example.moupass10.ui.home.FormFragment"
+        android:label="@string/menu_form"
+        tools:layout="@layout/fragment_form" />
 
-    <fragment
-        android:id="@+id/nav_slideshow"
-        android:name="com.example.moupass10.ui.slideshow.SlideshowFragment"
-        android:label="@string/menu_slideshow"
-        tools:layout="@layout/fragment_slideshow" />
 
 </navigation>
