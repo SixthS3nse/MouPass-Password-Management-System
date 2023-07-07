@@ -96,15 +96,20 @@
 
 
     <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnRegister"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/btnRegister"
         android:layout_below="@+id/txtConfirmPass"
-        android:text="@string/res_register"
-        android:backgroundTint="@color/txtBgGrey"
         android:layout_centerHorizontal="true"
-        android:layout_margin="50dp"
-        />
+        android:layout_marginStart="50dp"
+        android:layout_marginTop="50dp"
+        android:layout_marginEnd="50dp"
+        android:layout_marginBottom="50dp"
+        android:background="@drawable/ripple"
+        android:textColor="@color/black"
+        android:textStyle="bold"
+        android:backgroundTint="@color/txtBgGrey"
+        android:text="@string/res_register" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/btnInfo"

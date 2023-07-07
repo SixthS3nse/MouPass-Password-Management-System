@@ -1,14 +1,18 @@
 package com.example.moupass10;
 
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Base64;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import com.example.moupass10.ui.dashboard.DashboardFragment;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputLayout;
 
@@ -38,6 +42,17 @@ public class Form extends AppCompatActivity {
         txtUser = findViewById(R.id.txtUser);
         txtPass = findViewById(R.id.txtPass);
         txtWebsite = findViewById(R.id.txtWebsite);
+
+        //Toolbar
+        Toolbar formTool = (Toolbar) findViewById(R.id.formToolbar);
+        setSupportActionBar(formTool);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+
+        // Enable the Up button
+        ActionBar ab = getSupportActionBar();
+        if (ab != null) {
+            ab.setDisplayHomeAsUpEnabled(true);
+        }
 
         MaterialButton confirm = (MaterialButton) findViewById(R.id.btnConfirm );
 
@@ -80,7 +95,19 @@ public class Form extends AppCompatActivity {
                 }
             }
         });
+    }
 
+    // Handling press on the Back button in Toolbar
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                // Insert the fragment transaction here to replace the current fragment
+                startActivity(new Intent(Form.this, MainActivity.class));
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     //Storing Data into txt file
@@ -118,12 +145,12 @@ public class Form extends AppCompatActivity {
 
 
             // Concatenate the encrypted passwords
-            String csvData = base64Title + "," + base64User + "," + base64Pass + "," + base64Website + "\n";
+            String csvData = "," + base64Title + "," + base64User + "," + base64Pass + "," + base64Website + "\n";
 
             // Create a file stream for writing
             FileOutputStream fos = context.openFileOutput("content.snf", Context.MODE_APPEND);
             fos.write(csvData.getBytes());
-            fos.write("\n".getBytes());
+            fos.write("\r\n".getBytes());
             fos.close();
 
             return true;

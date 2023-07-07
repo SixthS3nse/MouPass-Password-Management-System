@@ -44,11 +44,12 @@ public class ForgotPassword extends AppCompatActivity {
         confirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                String path = getFilesDir().getPath();
                 // Read the encryption key from the key file
-                byte[] encryptionKey = readEncryptionKeyFromFile("/data/data/com.example.moupass10/files/k3y2.snf");
+                byte[] encryptionKey = readEncryptionKeyFromFile(path + "/k3y2.snf");
 
                 // Read the encrypted content from the file
-                byte[] encryptedContent = readEncryptedContentFromFile("/data/data/com.example.moupass10/files/r3c0v3ry.snf");
+                byte[] encryptedContent = readEncryptedContentFromFile(path + "/r3c0v3ry.snf");
 
                 // Decrypt the content
                 byte[] decryptedContent = decrypt(encryptedContent, encryptionKey);

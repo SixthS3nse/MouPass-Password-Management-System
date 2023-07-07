@@ -51,10 +51,12 @@ public class Login extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 // Read the encryption key from the key file
-                byte[] encryptionKey = readEncryptionKeyFromFile("/data/data/com.example.moupass10/files/k3y.snf");
+                String keyFilePath = getFilesDir().getPath() + "/k3y.snf";
+                byte[] encryptionKey = readEncryptionKeyFromFile(keyFilePath);
 
                 // Read the encrypted content from the file
-                byte[] encryptedContent = readEncryptedContentFromFile("/data/data/com.example.moupass10/files/p@ssw0rds.snf");
+                String contentFilePath = getFilesDir().getPath() + "/p@ssw0rds.snf";
+                byte[] encryptedContent = readEncryptedContentFromFile(contentFilePath);
 
                 // Decrypt the content
                 byte[] decryptedContent = decrypt(encryptedContent, encryptionKey);

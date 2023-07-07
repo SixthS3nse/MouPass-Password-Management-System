@@ -71,6 +71,9 @@
         android:layout_marginTop="20dp"
         android:layout_marginEnd="20dp"
         android:layout_marginBottom="20dp"
+        android:background="@drawable/ripple"
+        android:textColor="@color/black"
+        android:textStyle="bold"
         android:backgroundTint="@color/txtBgGrey"
         android:clickable="true"
         android:text="@string/res_login" />

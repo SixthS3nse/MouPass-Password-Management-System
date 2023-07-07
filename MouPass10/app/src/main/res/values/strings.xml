@@ -33,9 +33,28 @@
     <string name="form_website">Website</string>
     <string name="form_confirm">Confirm</string>
 
-<!--    &lt;!&ndash;List Item Strings&ndash;&gt;
-    <string name="list_title">Confirm</string>
-    <string name="lists1_website">www.facebook.com</string>-->
+
+    <!--Generator Strings-->
+    <string name="gen_copy">COPY</string>
+    <string name="gen_length">Password Length: </string>
+
+    <!--Dropdown List-->
+    <string-array name="pass_lengths">
+        <item>8</item>
+        <item>10</item>
+        <item>12</item>
+        <item>14</item>
+        <item>16</item>
+        <item>18</item>
+        <item>20</item>
+    </string-array>
+
+    <!--Checkbox Strings-->
+    <string name="chk_digits">Include Digits</string>
+    <string name="chk_upper">Include Uppercase</string>
+    <string name="chk_lower">Include Lowercase</string>
+    <string name="chk_alphabet">Include Alphabet</string>
+    <string name="chk_symbol">Include Symbols</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>

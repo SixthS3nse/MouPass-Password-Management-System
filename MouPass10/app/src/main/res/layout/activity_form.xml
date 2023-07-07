@@ -8,12 +8,26 @@
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context=".Form">
 
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/Theme.MouPass10.AppBarOverlay">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/formToolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@color/mainTheme"
+            app:popupTheme="@style/Theme.MouPass10.PopupOverlay" />
+
+    </com.google.android.material.appbar.AppBarLayout>
+
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/txtTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="80dp"
         android:layout_marginEnd="10dp"
         android:layout_marginBottom="10dp"
         android:textColor="@color/white"
@@ -135,6 +149,9 @@
         android:layout_marginTop="50dp"
         android:layout_marginEnd="50dp"
         android:layout_marginBottom="50dp"
+        android:background="@drawable/ripple"
+        android:textColor="@color/black"
+        android:textStyle="bold"
         android:backgroundTint="@color/txtBgGrey"
         android:text="@string/form_confirm" />
 

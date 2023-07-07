@@ -11,4 +11,5 @@
     <color name="txtBgGrey">#303030</color>
     <color name="white">#FFFFFFFF</color>
     <color name="mainTheme">#e3a72f</color>
+    <color name="grey">#B5B5B5</color>
 </resources>
