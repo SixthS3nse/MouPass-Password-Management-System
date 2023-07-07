@@ -1,5 +1,6 @@
 package com.example.moupass10.ui.generator;
 
+import androidx.core.view.ViewCompat;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.graphics.Color;
@@ -14,6 +15,7 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowInsets;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.Spinner;
@@ -49,8 +51,23 @@ public class GeneratorFragment extends Fragment {
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        GeneratorViewModel generatorViewModel =
-                new ViewModelProvider(this).get(GeneratorViewModel.class);
+        //Fix white bar under screen
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
+            final View decorView = getActivity().getWindow().getDecorView();
+            decorView.setOnApplyWindowInsetsListener(new View.OnApplyWindowInsetsListener() {
+                @Override
+                public WindowInsets onApplyWindowInsets(View v, WindowInsets insets) {
+                    final WindowInsets defaultInsets = decorView.onApplyWindowInsets(insets);
+                    return defaultInsets.replaceSystemWindowInsets(
+                            defaultInsets.getSystemWindowInsetLeft(),
+                            defaultInsets.getSystemWindowInsetTop(),
+                            defaultInsets.getSystemWindowInsetRight(),
+                            0  // remove bottom inset
+                    );
+                }
+            });
+            ViewCompat.requestApplyInsets(decorView);
+        }
 
         binding = FragmentGeneratorBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
@@ -62,7 +79,6 @@ public class GeneratorFragment extends Fragment {
         chkDigits = root.findViewById(R.id.chkDigits);
         chkUppercase = root.findViewById(R.id.chkUppercase);
         chkLowercase = root.findViewById(R.id.chkLowercase);
-        chkAlphabet = root.findViewById(R.id.chkAlphabet);
         chkSymbols = root.findViewById(R.id.chkSymbols);
 
         // Create an ArrayAdapter using the string array and a default spinner layout
@@ -73,7 +89,7 @@ public class GeneratorFragment extends Fragment {
         lstLength.setAdapter(adapter);
 
         //Generate Passphrase onCreate
-        String password = onCreatePasswordGenerator(8);
+        String password = onCreatePasswordGenerator(10);
         txtPass.setText(password);
 
         //Generate Passphrase when button clicked
@@ -81,7 +97,7 @@ public class GeneratorFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 int length = Integer.parseInt(lstLength.getSelectedItem().toString());
-                String password = PasswordGenerator(length, chkDigits.isChecked(), chkUppercase.isChecked(), chkLowercase.isChecked(), chkAlphabet.isChecked(), chkSymbols.isChecked());
+                String password = PasswordGenerator(length, chkDigits.isChecked(), chkUppercase.isChecked(), chkLowercase.isChecked(), chkSymbols.isChecked());
                 txtPass.setText(password);
             }
         });
@@ -114,13 +130,12 @@ public class GeneratorFragment extends Fragment {
     }
 
     // Method to generate a random password based on selected lengths
-    private String PasswordGenerator(int length, boolean useDigits, boolean useUppercase, boolean useLowercase, boolean useAlphabet, boolean useSymbols) {
+    private String PasswordGenerator(int length, boolean useDigits, boolean useUppercase, boolean useLowercase, boolean useSymbols) {
         String pass = "";
         if (useDigits) pass += "0123456789";
         if (useUppercase) pass += "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
         if (useLowercase) pass += "abcdefghijklmnopqrstuvwxyz";
-        if (useAlphabet) pass += "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
-        if (useSymbols) pass += "!@#$%^&*()_+=-{}[]|:;<>?,./~`";
+        if (useSymbols) pass += "!@#$%^&*()_+={}|:;<>?,./~`";
         if (pass.equals("")) return "Invalid options!";
 
         StringBuilder password = new StringBuilder();

@@ -8,5 +8,6 @@
     android:layout_height="wrap_content"
     android:ellipsize="marquee"
     android:textColor="@color/black"
+    android:background="@color/mainTheme"
     android:textStyle="bold"
     android:textSize="15sp"/>  <!-- Change this to the color you want -->

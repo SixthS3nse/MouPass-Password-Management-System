@@ -38,9 +38,13 @@
     <string name="gen_copy">COPY</string>
     <string name="gen_length">Password Length: </string>
 
+    <!--Detector Strings-->
+    <string name="det_userpass">Passphrase</string>
+    <string name="det_check">CHECK</string>
+    <string name="det_result">Estimate Time to Crack: </string>
+
     <!--Dropdown List-->
     <string-array name="pass_lengths">
-        <item>8</item>
         <item>10</item>
         <item>12</item>
         <item>14</item>

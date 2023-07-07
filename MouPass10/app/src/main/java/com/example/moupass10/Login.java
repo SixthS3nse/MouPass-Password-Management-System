@@ -36,6 +36,11 @@ public class Login extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        //Fix white bar under screen
+        View decorView = getWindow().getDecorView();
+        int uiOptions = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_FULLSCREEN | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
+        decorView.setSystemUiVisibility(uiOptions);
+
         MaterialButton login = (MaterialButton) findViewById(R.id.btnLogin);
         TextInputLayout txtMasterPass = (TextInputLayout) findViewById(R.id.txtMasterPass);
         FloatingActionButton info = (FloatingActionButton) findViewById(R.id.btnInfo);

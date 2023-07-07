@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="16dp"
+    android:background="@color/bgBlack"
     >
 
     <TextView
@@ -18,7 +19,7 @@
         android:gravity="left"
         android:inputType="text"
         android:text="@string/gen_length"
-        android:textColor="@color/black"
+        android:textColor="@color/white"
         android:textStyle="bold"
         android:textSize="15sp"
         />
@@ -29,7 +30,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="50dp"
         android:layout_toEndOf="@id/lblCount"
-        android:background="@drawable/border_black"
+        android:background="@drawable/border"
         />
 
     <CheckBox
@@ -39,6 +40,7 @@
         android:layout_below="@+id/lstLength"
         android:layout_marginLeft="3dp"
         android:text="@string/chk_digits"
+        android:textColor="@color/white"
         android:textStyle="bold"
         android:checked="true"
         />
@@ -50,6 +52,7 @@
         android:layout_below="@+id/chkDigits"
         android:text="@string/chk_upper"
         android:layout_marginLeft="3dp"
+        android:textColor="@color/white"
         android:textStyle="bold"
         android:checked="true"
         />
@@ -61,17 +64,7 @@
         android:layout_below="@+id/chkUppercase"
         android:layout_marginLeft="3dp"
         android:text="@string/chk_lower"
-        android:textStyle="bold"
-        android:checked="true"
-        />
-
-    <CheckBox
-        android:id="@+id/chkAlphabet"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/chkLowercase"
-        android:layout_marginLeft="3dp"
-        android:text="@string/chk_lower"
+        android:textColor="@color/white"
         android:textStyle="bold"
         android:checked="true"
         />
@@ -80,9 +73,10 @@
         android:id="@+id/chkSymbols"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/chkAlphabet"
+        android:layout_below="@+id/chkLowercase"
         android:layout_marginLeft="3dp"
         android:text="@string/chk_symbol"
+        android:textColor="@color/white"
         android:textStyle="bold"
         android:checked="true"
         />
@@ -96,8 +90,8 @@
         android:layout_marginEnd="10dp"
         android:layout_marginBottom="10dp"
         android:layout_below="@+id/chkSymbols"
-        android:background="@drawable/border_black"
-        android:textColor="@color/black"
+        android:background="@drawable/border"
+        android:textColor="@color/white"
         android:inputType="textNoSuggestions"
         android:gravity="center"
         android:textStyle="bold"
@@ -111,7 +105,7 @@
         android:layout_marginTop="24dp"
         android:layout_below="@+id/chkSymbols"
         android:layout_toEndOf="@+id/txtPassPhrase"
-        android:drawableStart="@drawable/baseline_autorenew_40"
+        android:drawableStart="@drawable/baseline_autorenew_white_40"
         android:clickable="true"
         android:textColor="@color/white"
         />

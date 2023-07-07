@@ -8,6 +8,7 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.view.ViewCompat;
 import androidx.fragment.app.Fragment;
 
 import android.util.Base64;
@@ -15,6 +16,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowInsets;
 
 
 import com.example.moupass10.DataAdapter;
@@ -49,6 +51,24 @@ public class DashboardFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
+
+        //Fix white bar under screen
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
+            final View decorView = getActivity().getWindow().getDecorView();
+            decorView.setOnApplyWindowInsetsListener(new View.OnApplyWindowInsetsListener() {
+                @Override
+                public WindowInsets onApplyWindowInsets(View v, WindowInsets insets) {
+                    final WindowInsets defaultInsets = decorView.onApplyWindowInsets(insets);
+                    return defaultInsets.replaceSystemWindowInsets(
+                            defaultInsets.getSystemWindowInsetLeft(),
+                            defaultInsets.getSystemWindowInsetTop(),
+                            defaultInsets.getSystemWindowInsetRight(),
+                            0  // remove bottom inset
+                    );
+                }
+            });
+            ViewCompat.requestApplyInsets(decorView);
+        }
 
         View view = inflater.inflate(R.layout.fragment_dashboard, container, false);
         //Display Entry
