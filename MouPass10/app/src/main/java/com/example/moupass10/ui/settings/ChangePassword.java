@@ -1,22 +1,28 @@
-package com.example.moupass10;
+package com.example.moupass10.ui.settings;
+
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.ViewCompat;
 
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Base64;
+import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowInsets;
 import android.widget.Toast;
-import android.content.SharedPreferences;
+
+import com.example.moupass10.Form;
+import com.example.moupass10.MainActivity;
+import com.example.moupass10.R;
+import com.example.moupass10.Recovery;
+import com.example.moupass10.Register;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-
-import androidx.navigation.ui.AppBarConfiguration;
-import androidx.appcompat.app.AppCompatActivity;
-
 import com.google.android.material.textfield.TextInputLayout;
 
-import android.os.Environment;
-import android.util.Base64;
-import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
@@ -26,34 +32,41 @@ import javax.crypto.Cipher;
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
-import android.content.SharedPreferences;
 
-public class Register extends AppCompatActivity {
-
-    private static final String PREFS_NAME = "PrefsStatus";
-    private static final String KEY_REGISTERED = "userRegistered";
-
+public class ChangePassword extends AppCompatActivity {
+    MaterialButton btnSubmit;
     private TextInputLayout txtMasterPass;
     private TextInputLayout txtConfirmPass;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        //App Launch
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_register);
+        setContentView(R.layout.activity_change_password);
 
         //Fix white bar under screen
         View decorView = getWindow().getDecorView();
         int uiOptions = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_FULLSCREEN | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
         decorView.setSystemUiVisibility(uiOptions);
 
+        //Toolbar
+        Toolbar formTool = (Toolbar) findViewById(R.id.cpToolbar);
+        setSupportActionBar(formTool);
+        getSupportActionBar().setDisplayShowTitleEnabled(true);
+        getSupportActionBar().setTitle("Change Password");
+
+        // Enable the Up button
+        ActionBar ab = getSupportActionBar();
+        if (ab != null) {
+            ab.setDisplayHomeAsUpEnabled(true);
+        }
+
+        //Change password form input field
         txtMasterPass = findViewById(R.id.txtMasterPass);
         txtConfirmPass = findViewById(R.id.txtConfirmPass);
 
-        MaterialButton register = (MaterialButton) findViewById(R.id.btnRegister);
-        FloatingActionButton info = (FloatingActionButton) findViewById(R.id.btnInfo);
+        MaterialButton register = (MaterialButton) findViewById(R.id.btnSubmit);
 
-        //Register Page Input Validation
+        //Change password form input validation
         register.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -73,48 +86,50 @@ public class Register extends AppCompatActivity {
 
                             // Save encrypted passwords to CSV file
                             if (saveToCSV(getApplicationContext(), encryptedMasterPass)) {
-                                Toast.makeText(Register.this, "Registered", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(ChangePassword.this, "Password Changed", Toast.LENGTH_SHORT).show();
                             } else {
-                                Toast.makeText(Register.this, "⚠️Error saving password!⚠️", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(ChangePassword.this, "⚠️Error saving password!⚠️", Toast.LENGTH_SHORT).show();
                             }
 
                             // Save encrypted Key to CSV file
                             if (saveKey(getApplicationContext(), encryptionKey)) {
                                 //Toast.makeText(Register.this, "Key saved successfully.", Toast.LENGTH_SHORT).show();
                             } else {
-                                Toast.makeText(Register.this, "⚠️Error saving Key!⚠️", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(ChangePassword.this, "⚠️Error saving Key!⚠️", Toast.LENGTH_SHORT).show();
                             }
 
-                            //Save Registration Status
-                            saveRegistrationStatus();
-
                             //Redirect to Next Page
-                            startActivity(new Intent(Register.this,Recovery.class));
+                            startActivity(new Intent(ChangePassword.this, MainActivity.class));
                             break;
                         case 1:
-                            Toast.makeText(Register.this, "Password must have more than 8 characters", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(ChangePassword.this, "Password must have more than 8 characters", Toast.LENGTH_SHORT).show();
                             break;
                         case 2:
-                            Toast.makeText(Register.this, "Password must contain at least one uppercase letter", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(ChangePassword.this, "Password must contain at least one uppercase letter", Toast.LENGTH_SHORT).show();
                             break;
                         case 3:
-                            Toast.makeText(Register.this, "Password must be alphanumeric", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(ChangePassword.this, "Password must be alphanumeric", Toast.LENGTH_SHORT).show();
                             break;
                     }
                 } else {
-                    Toast.makeText(Register.this, "Incorrect confirm password or no password in entered", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ChangePassword.this, "Incorrect confirm password or no password in entered", Toast.LENGTH_SHORT).show();
                 }
             }
         });
 
-        //Information Button
-        info.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(Register.this,"⚠️Stored data cannot be recovered the master password is lost⚠️",Toast.LENGTH_LONG).show();
-            }
-        });
+    }
 
+    // Handling press on the Back button in Toolbar
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                // Insert the fragment transaction here to replace the current fragment
+                startActivity(new Intent(ChangePassword.this, MainActivity.class));
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     //Password Requirements
@@ -214,13 +229,5 @@ public class Register extends AppCompatActivity {
         }
         return false;
     }
-    private void saveRegistrationStatus() {
-        SharedPreferences preferences = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
-        SharedPreferences.Editor editor = preferences.edit();
-        editor.putBoolean(KEY_REGISTERED, true);
-        editor.apply();
-    }
+
 }
-
-
-
