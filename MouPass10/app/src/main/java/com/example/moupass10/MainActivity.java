@@ -107,6 +107,12 @@ public class MainActivity extends AppCompatActivity {
                 || super.onSupportNavigateUp();
     }
 
+    // Handling Back button pressed
+    @Override
+    public void onBackPressed() {
+        finish();
+    }
+
 /*    private void loadPasswords() {
         FileInputStream fis = null;
         BufferedReader reader = null;

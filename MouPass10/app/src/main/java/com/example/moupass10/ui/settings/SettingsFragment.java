@@ -1,7 +1,6 @@
 package com.example.moupass10.ui.settings;
 
 import androidx.core.view.ViewCompat;
-import androidx.lifecycle.ViewModelProvider;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -17,9 +16,6 @@ import android.view.ViewGroup;
 import android.view.WindowInsets;
 
 import com.example.moupass10.R;
-import com.example.moupass10.SettingsAdapter;
-import com.example.moupass10.SettingsOption;
-import com.example.moupass10.databinding.FragmentGeneratorBinding;
 import com.example.moupass10.databinding.FragmentSettingsBinding;
 
 import androidx.recyclerview.widget.LinearLayoutManager;

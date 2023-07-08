@@ -3,7 +3,6 @@ package com.example.moupass10.ui.settings;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.view.ViewCompat;
 
 import android.content.Context;
 import android.content.Intent;
@@ -12,17 +11,12 @@ import android.os.Bundle;
 import android.util.Base64;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.WindowInsets;
 import android.widget.Toast;
 
-import com.example.moupass10.Form;
 import com.example.moupass10.Login;
 import com.example.moupass10.MainActivity;
 import com.example.moupass10.R;
-import com.example.moupass10.Recovery;
-import com.example.moupass10.Register;
 import com.google.android.material.button.MaterialButton;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputLayout;
 
 import java.io.FileOutputStream;
