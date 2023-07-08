@@ -3,6 +3,8 @@ package com.example.moupass10.ui.settings;
 import androidx.core.view.ViewCompat;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -36,6 +38,15 @@ public class SettingsFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
 
+        // Check "Login" SharedPreferences value
+        SharedPreferences sharedPreferences = requireActivity().getSharedPreferences("Login", Context.MODE_PRIVATE);
+        boolean isLoggedIn = sharedPreferences.getBoolean("isLoggedIn", false);
+
+        if (!isLoggedIn) {
+            requireActivity().finishAffinity();
+            System.exit(0);
+        }
+
         //Fix white bar under screen
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
             final View decorView = getActivity().getWindow().getDecorView();
@@ -60,8 +71,8 @@ public class SettingsFragment extends Fragment {
         // Create dummy settings options
         settingsOptions = new ArrayList<>();
         settingsOptions.add(new SettingsOption(R.drawable.baseline_password_maintheme_24, "Change Password"));
-        settingsOptions.add(new SettingsOption(R.drawable.baseline_backup_24, "Export/Backup"));
-        settingsOptions.add(new SettingsOption(R.drawable.baseline_restore_24, "Restore"));
+        settingsOptions.add(new SettingsOption(R.drawable.baseline_backup_24, "Export"));
+        settingsOptions.add(new SettingsOption(R.drawable.baseline_restore_24, "Import"));
         settingsOptions.add(new SettingsOption(R.drawable.baseline_delete_24, "Delete Data"));
 
         // Setup RecyclerView

@@ -1,17 +1,9 @@
 package com.example.moupass10;
 
-import android.app.Activity;
-import android.content.ContentResolver;
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.media.MediaScannerConnection;
-import android.net.Uri;
-import android.os.Build;
 import android.os.Environment;
-import android.provider.DocumentsContract;
-import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,15 +13,9 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.core.content.FileProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.moupass10.ui.settings.Backup;
 import com.example.moupass10.ui.settings.ChangePassword;
-import com.example.moupass10.ui.settings.ClearData;
-import com.example.moupass10.ui.settings.Restore;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -96,10 +82,8 @@ public class SettingsAdapter extends RecyclerView.Adapter<SettingsAdapter.ViewHo
                 importFiles();
                 break;
             case 3: // Delete Data
-                Intent frmClearData = new Intent(context, ClearData.class);
-                context.startActivity(frmClearData);
+                deleteFiles();
                 break;
-            // Add cases for other options as needed
         }
     }
 
@@ -251,5 +235,27 @@ public class SettingsAdapter extends RecyclerView.Adapter<SettingsAdapter.ViewHo
             }
         }
     }
+
+    private void deleteFiles() {
+        try {
+            File filesDirectory = context.getFilesDir();
+            File contentFile = new File(filesDirectory, "content.snf");
+            File k3y3File = new File(filesDirectory, "k3y3.snf");
+
+            if (contentFile.exists() && k3y3File.exists()) {
+                if (contentFile.delete() && k3y3File.delete()) {
+                    Toast.makeText(context, "Data Deleted", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(context, "Error Occured", Toast.LENGTH_SHORT).show();
+                }
+            } else {
+                Toast.makeText(context, "Data Not Found", Toast.LENGTH_SHORT).show();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            Toast.makeText(context, "An error occurred while deleting data", Toast.LENGTH_SHORT).show();
+        }
+    }
+
 
 }

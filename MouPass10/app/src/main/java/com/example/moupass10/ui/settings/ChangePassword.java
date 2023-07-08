@@ -7,6 +7,7 @@ import androidx.core.view.ViewCompat;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Base64;
 import android.view.MenuItem;
@@ -15,6 +16,7 @@ import android.view.WindowInsets;
 import android.widget.Toast;
 
 import com.example.moupass10.Form;
+import com.example.moupass10.Login;
 import com.example.moupass10.MainActivity;
 import com.example.moupass10.R;
 import com.example.moupass10.Recovery;
@@ -42,6 +44,15 @@ public class ChangePassword extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_change_password);
+
+        // Check "Login" SharedPreferences value
+        SharedPreferences sharedPreferences = getSharedPreferences("Login", Context.MODE_PRIVATE);
+        boolean isLoggedIn = sharedPreferences.getBoolean("isLoggedIn", false);
+
+        if (!isLoggedIn) {
+            finishAffinity();
+            System.exit(0);
+        }
 
         //Fix white bar under screen
         View decorView = getWindow().getDecorView();
@@ -93,13 +104,14 @@ public class ChangePassword extends AppCompatActivity {
 
                             // Save encrypted Key to CSV file
                             if (saveKey(getApplicationContext(), encryptionKey)) {
-                                //Toast.makeText(Register.this, "Key saved successfully.", Toast.LENGTH_SHORT).show();
+                                //Toast.makeText(ChangePassword.this, "Key saved successfully.", Toast.LENGTH_SHORT).show();
                             } else {
                                 Toast.makeText(ChangePassword.this, "⚠️Error saving Key!⚠️", Toast.LENGTH_SHORT).show();
                             }
 
-                            //Redirect to Next Page
-                            startActivity(new Intent(ChangePassword.this, MainActivity.class));
+                            //Logout From Session
+                            logoutSession();
+                            onBackPressed();
                             break;
                         case 1:
                             Toast.makeText(ChangePassword.this, "Password must have more than 8 characters", Toast.LENGTH_SHORT).show();
@@ -116,7 +128,12 @@ public class ChangePassword extends AppCompatActivity {
                 }
             }
         });
+    }
 
+    // Handling Back button pressed
+    @Override
+    public void onBackPressed() {
+        finish();
     }
 
     // Handling press on the Back button in Toolbar
@@ -228,6 +245,17 @@ public class ChangePassword extends AppCompatActivity {
             e.printStackTrace();
         }
         return false;
+    }
+
+    private void logoutSession() {
+        // Clear Session Data
+        SharedPreferences sharedPreferences = getSharedPreferences("Login", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.clear();
+        editor.apply();
+
+        // Example: Navigate to the login screen
+        startActivity(new Intent(this, Login.class));
     }
 
 }

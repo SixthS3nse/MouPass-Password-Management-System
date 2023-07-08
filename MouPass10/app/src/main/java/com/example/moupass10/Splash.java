@@ -13,7 +13,7 @@ import android.view.View;
 import com.example.moupass10.R;
 
 public class Splash extends AppCompatActivity {
-    private static final String PREFS_NAME = "PrefsStatus";
+    private static final String PREFS_NAME = "Register";
     private static final String KEY_REGISTERED = "userRegistered";
 
     @Override

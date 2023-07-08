@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.AssetManager;
 import android.os.Bundle;
 import android.util.Log;
@@ -74,8 +75,11 @@ public class Login extends AppCompatActivity {
                     if (MasterPass.getEditText().getText().toString().equals(decryptedText)) {
                         //Print Login Successful
                         Toast.makeText(Login.this, "Login Successful", Toast.LENGTH_SHORT).show();
+                        //Save Login Session
+                        LoginSession();
                         //Redirect to next page
                         startActivity(new Intent(Login.this, MainActivity.class));
+                        finish();
                     } else {
                         //Print Login Failed
                         Toast.makeText(Login.this, "Login Failed", Toast.LENGTH_SHORT).show();
@@ -159,5 +163,12 @@ public class Login extends AppCompatActivity {
             e.printStackTrace();
         }
         return null;
+    }
+
+    private void LoginSession() {
+        SharedPreferences sharedPreferences = getSharedPreferences("Login", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putBoolean("isLoggedIn", true);
+        editor.apply();
     }
 }

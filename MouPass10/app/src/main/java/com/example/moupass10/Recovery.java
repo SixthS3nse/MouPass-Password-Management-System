@@ -57,6 +57,7 @@ public class Recovery extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(Recovery.this,Login.class));
+                finish();
             }
         });
 

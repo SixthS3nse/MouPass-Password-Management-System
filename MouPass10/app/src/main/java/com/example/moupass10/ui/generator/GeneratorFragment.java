@@ -3,6 +3,7 @@ package com.example.moupass10.ui.generator;
 import androidx.core.view.ViewCompat;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 
@@ -51,6 +52,16 @@ public class GeneratorFragment extends Fragment {
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
+
+        // Check "Login" SharedPreferences value
+        SharedPreferences sharedPreferences = requireActivity().getSharedPreferences("Login", Context.MODE_PRIVATE);
+        boolean isLoggedIn = sharedPreferences.getBoolean("isLoggedIn", false);
+
+        if (!isLoggedIn) {
+            requireActivity().finishAffinity();
+            System.exit(0);
+        }
+
         //Fix white bar under screen
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
             final View decorView = getActivity().getWindow().getDecorView();

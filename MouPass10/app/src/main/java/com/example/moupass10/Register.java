@@ -30,7 +30,7 @@ import android.content.SharedPreferences;
 
 public class Register extends AppCompatActivity {
 
-    private static final String PREFS_NAME = "PrefsStatus";
+    private static final String PREFS_NAME = "Register";
     private static final String KEY_REGISTERED = "userRegistered";
 
     private TextInputLayout txtMasterPass;
@@ -90,6 +90,7 @@ public class Register extends AppCompatActivity {
 
                             //Redirect to Next Page
                             startActivity(new Intent(Register.this,Recovery.class));
+                            finish();
                             break;
                         case 1:
                             Toast.makeText(Register.this, "Password must have more than 8 characters", Toast.LENGTH_SHORT).show();
