@@ -44,7 +44,7 @@
     <string name="det_result">Estimate Time to Crack: </string>
 
     <!--frmChangePass-->
-    <string name="cp_submit">SUBMIT</string>
+    <string name="cp_confirm">CONFIRM</string>
 
     <!--Dropdown List-->
     <string-array name="pass_lengths">
