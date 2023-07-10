@@ -1,6 +1,7 @@
 package com.example.moupass10;
 
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.IBinder;
@@ -9,70 +10,28 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.graphics.Color;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
+
 import androidx.core.app.NotificationCompat;
 
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
-
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-
 public class MoupassPhishingDetection extends Service {
-    private static final String CHANNEL_ID = "MyChannel";
+
+    private static final String CHANNEL_ID = "SafeBrowsingChannel";
+    private static final int NOTIFICATION_ID = 1;
+
+    private WebView webView;
 
     @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
-        // Create a notification and start the service in foreground
+    public void onCreate() {
+        super.onCreate();
+        startForegroundService();
+        setupWebView();
+    }
+
+    private void startForegroundService() {
         createNotificationChannel();
-        startForeground(1, getNotification("Checking website status...", Color.GRAY));
 
-        // Get the URL from the intent and check its status in a new thread
-        new Thread(() -> {
-            String url = intent.getStringExtra("url");
-            String status = checkWebsiteStatus(url);
-            Notification notification = getNotification("The status of the website is: " + status, getStatusColor(status));
-            NotificationManager notificationManager = getSystemService(NotificationManager.class);
-            notificationManager.notify(1, notification);
-        }).start();
-
-        return START_NOT_STICKY;
-    }
-
-    //API
-    private String checkWebsiteStatus(String url) {
-        String status = "unknown";
-        OkHttpClient client = new OkHttpClient();
-
-        // Here, you need to replace <YOUR_API_KEY> and <CLIENT_ID> with your actual API key and client ID
-        String apiUrl = "https://safebrowsing.googleapis.com/v4/threatMatches:find?key=AIzaSyDmlOM-i457qZobyUJgsMQ7LJ2XIHszLSY";
-
-        JsonObject requestBody = new JsonObject();
-        requestBody.addProperty("clientId", "MOUPASS");
-        requestBody.addProperty("clientVersion", "1.5.2");
-        requestBody.addProperty("threatTypes", "SOCIAL_ENGINEERING");
-        requestBody.addProperty("platformTypes", "WINDOWS");
-        requestBody.addProperty("threatEntryTypes", "URL");
-        requestBody.addProperty("threatEntries", url);
-
-        // ... You need to construct the rest of the request body according to the Google Safe Browsing API ...
-
-        Request request = new Request.Builder()
-                .url(apiUrl)
-                .post(okhttp3.RequestBody.create(requestBody.toString(), okhttp3.MediaType.parse("application/json; charset=utf-8")))
-                .build();
-
-        try (Response response = client.newCall(request).execute()) {
-            JsonObject jsonObject = JsonParser.parseString(response.body().string()).getAsJsonObject();
-            // Parse the response and determine the status ...
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return status;
-    }
-
-    private Notification getNotification(String text, int color) {
         Intent intent = new Intent(this, MainActivity.class);
         PendingIntent pendingIntent;
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
@@ -81,38 +40,66 @@ public class MoupassPhishingDetection extends Service {
             pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_MUTABLE);
         }
 
-        return new NotificationCompat.Builder(this, CHANNEL_ID)
-                .setSmallIcon(R.drawable.ic_launcher_foreground)
-                .setContentTitle("Website Status")
-                .setContentText(text)
+        Notification notification = new NotificationCompat.Builder(this, CHANNEL_ID)
+                .setContentTitle("Safe Browsing Service")
+                .setContentText("Service running")
+                .setSmallIcon(R.mipmap.ic_launcher)
                 .setContentIntent(pendingIntent)
-                .setColor(color)
                 .build();
-    }
 
-    private int getStatusColor(String status) {
-        switch (status) {
-            case "safe":
-                return Color.GREEN;
-            case "malicious":
-                return Color.YELLOW;
-            case "danger":
-                return Color.RED;
-            default:
-                return Color.GRAY;
-        }
+        startForeground(NOTIFICATION_ID, notification);
     }
 
     private void createNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationChannel serviceChannel = new NotificationChannel(
-                    CHANNEL_ID,
-                    "Website Status Channel",
-                    NotificationManager.IMPORTANCE_DEFAULT
-            );
-            NotificationManager manager = getSystemService(NotificationManager.class);
-            manager.createNotificationChannel(serviceChannel);
+            CharSequence name = "Safe Browsing Channel";
+            String description = "Channel for Safe Browsing Service";
+            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
+            channel.setDescription(description);
+
+            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
         }
+    }
+
+    private void setupWebView() {
+        webView = new WebView(this);
+        webView.setWebViewClient(new WebViewClient() {
+            @Override
+            public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                checkUrlSafety(url);
+                return false;
+            }
+        });
+    }
+
+    private void checkUrlSafety(String url) {
+        new SafeBrowsingTask(new SafeBrowsingTask.SafeBrowsingCallback() {
+            @Override
+            public void onSafeBrowsingComplete(String status) {
+                if (status.equals("safe")) {
+                    showNotification("Safe", Color.GREEN);
+                } else if (status.equals("malicious")) {
+                    showNotification("Danger", Color.YELLOW);
+                } else if (status.equals("danger")) {
+                    showNotification("Danger", Color.RED);
+                }
+            }
+        }).execute(url);
+    }
+
+    private void showNotification(String status, int backgroundColor) {
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID)
+                .setSmallIcon(R.mipmap.ic_launcher)
+                .setContentTitle("Website Safety")
+                .setContentText(status)
+                .setColor(backgroundColor)
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                .setAutoCancel(true);
+
+        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        notificationManager.notify(NOTIFICATION_ID, builder.build());
     }
 
     @Override

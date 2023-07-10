@@ -1,6 +1,8 @@
 package com.example.moupass10.ui.settings;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.media.MediaScannerConnection;
 import android.os.Environment;
@@ -82,7 +84,23 @@ public class SettingsAdapter extends RecyclerView.Adapter<SettingsAdapter.ViewHo
                 importFiles();
                 break;
             case 3: // Delete Data
-                deleteFiles();
+                AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                builder.setTitle("Confirm Deletion");
+                builder.setMessage("Are you sure you want to delete the files? This action cannot be undone.");
+
+                // Add positive button with confirmation action
+                builder.setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        deleteFiles();
+                    }
+                });
+
+                // Add negative button to cancel the deletion
+                builder.setNegativeButton("Cancel", null);
+
+                AlertDialog dialog = builder.create();
+                dialog.show();
                 break;
         }
     }
@@ -113,7 +131,7 @@ public class SettingsAdapter extends RecyclerView.Adapter<SettingsAdapter.ViewHo
         if (files != null) {
             for (File file : files) {
                 if (file.isFile()) {
-                    if (file.getName().equals("content.snf")) {
+                    if (file.getName().equals("Data.snf")) {
                         isContentSnfFound = true;
                     } else if (file.getName().equals("k3y3.snf")) {
                         isK3y3SnfFound = true;
@@ -124,7 +142,7 @@ public class SettingsAdapter extends RecyclerView.Adapter<SettingsAdapter.ViewHo
 
         if (isContentSnfFound && isK3y3SnfFound) {
             for (File file : files) {
-                if (file.isFile() && (file.getName().equals("content.snf") || file.getName().equals("k3y3.snf"))) {
+                if (file.isFile() && (file.getName().equals("Data.snf") || file.getName().equals("k3y3.snf"))) {
                     try {
                         exportFile(file, exportDirectory);
                     } catch (IOException e) {
@@ -181,7 +199,7 @@ public class SettingsAdapter extends RecyclerView.Adapter<SettingsAdapter.ViewHo
         if (files != null) {
             for (File file : files) {
                 if (file.isFile()) {
-                    if (file.getName().equals("content.snf")) {
+                    if (file.getName().equals("Data.snf")) {
                         isContentSnfFound = true;
                     } else if (file.getName().equals("k3y3.snf")) {
                         isK3y3SnfFound = true;
@@ -192,7 +210,7 @@ public class SettingsAdapter extends RecyclerView.Adapter<SettingsAdapter.ViewHo
 
         if (isContentSnfFound && isK3y3SnfFound) {
             for (File file : files) {
-                if (file.isFile() && (file.getName().equals("content.snf") || file.getName().equals("k3y3.snf"))) {
+                if (file.isFile() && (file.getName().equals("Data.snf") || file.getName().equals("k3y3.snf"))) {
                     try {
                         importFile(file, importDirectory);
                     } catch (IOException e) {
@@ -239,7 +257,7 @@ public class SettingsAdapter extends RecyclerView.Adapter<SettingsAdapter.ViewHo
     private void deleteFiles() {
         try {
             File filesDirectory = context.getFilesDir();
-            File contentFile = new File(filesDirectory, "content.snf");
+            File contentFile = new File(filesDirectory, "Data.snf");
             File k3y3File = new File(filesDirectory, "k3y3.snf");
 
             if (contentFile.exists() && k3y3File.exists()) {

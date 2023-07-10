@@ -14,11 +14,7 @@ import com.google.android.material.button.MaterialButton;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputLayout;
 
-import android.content.Context;
-import android.widget.Toast;
-
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.security.Key;
@@ -36,15 +32,6 @@ public class ForgotPassword extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_forgot_password);
-
-        // Check "Login" SharedPreferences value
-        SharedPreferences sharedPreferences = getSharedPreferences("Login", Context.MODE_PRIVATE);
-        boolean isLoggedIn = sharedPreferences.getBoolean("isLoggedIn", false);
-
-        if (!isLoggedIn) {
-            finishAffinity();
-            System.exit(0);
-        }
 
         //Fix white bar under screen
         View decorView = getWindow().getDecorView();
@@ -78,8 +65,11 @@ public class ForgotPassword extends AppCompatActivity {
                         // Codes match, display a success message
                         Toast.makeText(ForgotPassword.this, "Account recovered successfully!", Toast.LENGTH_SHORT).show();
 
+                        //Save Login Session
+                        LoginSession();
+
                         //Redirect to Next Page
-                        startActivity(new Intent(ForgotPassword.this,MainActivity.class));
+                        startActivity(new Intent(ForgotPassword.this, MainActivity.class));
                     } else {
                         //Print Login Failed
                         Toast.makeText(ForgotPassword.this, "Invalid recovery codes!", Toast.LENGTH_SHORT).show();
@@ -124,5 +114,12 @@ public class ForgotPassword extends AppCompatActivity {
             e.printStackTrace();
         }
         return null;
+    }
+
+    private void LoginSession() {
+        SharedPreferences sharedPreferences = getSharedPreferences("Login", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putBoolean("isLoggedIn", true);
+        editor.apply();
     }
 }

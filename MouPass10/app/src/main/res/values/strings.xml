@@ -85,5 +85,11 @@
     </string>
     <string name="attachment_summary_off">Only download attachments when manually requested</string>
 
+    <!--Dashboard Details Strings-->
+    <string name="dashd_title">Title</string>
+    <string name="dashd_username">Username</string>
+    <string name="dashd_password">Password</string>
+    <string name="dashd_website">Website</string>
+
 
 </resources>

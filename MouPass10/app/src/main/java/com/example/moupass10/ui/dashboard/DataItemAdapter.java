@@ -1,4 +1,4 @@
-package com.example.moupass10;
+package com.example.moupass10.ui.dashboard;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -6,42 +6,42 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.util.ArrayList;
+import com.example.moupass10.R;
+
 import java.util.List;
 
-public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
+public class DataItemAdapter extends RecyclerView.Adapter<com.example.moupass10.ui.dashboard.DataItemAdapter.ViewHolder> {
 
-    private ArrayList<DataModel> mData;
+    private List<DataItem> dataItems;
     private LayoutInflater mInflater;
     private Context context;
 
     // data is passed into the constructor
-    public DataAdapter(Context context, ArrayList<DataModel> data) {
+    public DataItemAdapter(Context context, List<DataItem> data) {
         this.mInflater = LayoutInflater.from(context);
-        this.mData = data;
+        this.dataItems = data;
         this.context = context;
     }
 
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public com.example.moupass10.ui.dashboard.DataItemAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = mInflater.inflate(R.layout.item_list, parent, false);
-        return new ViewHolder(view);
+        return new com.example.moupass10.ui.dashboard.DataItemAdapter.ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
-        String title = mData.get(position).getTitle();
-        String website = mData.get(position).getWebsite();
+    public void onBindViewHolder(com.example.moupass10.ui.dashboard.DataItemAdapter.ViewHolder holder, int position) {
+        String title = dataItems.get(position).getTitle();
+        String website = dataItems.get(position).getWebsite();
         holder.txtTitle.setText(title);
         holder.txtWebsite.setText(website);
     }
 
     @Override
     public int getItemCount() {
-        return mData.size();
+        return dataItems.size();
     }
 
     // stores and recycles views as they are scrolled off screen
@@ -56,4 +56,3 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
         }
     }
 }
-

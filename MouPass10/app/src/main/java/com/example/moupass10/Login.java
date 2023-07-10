@@ -5,19 +5,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.res.AssetManager;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.moupass10.ui.home.HomeFragment;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputLayout;
-
-import org.w3c.dom.Text;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -105,29 +100,6 @@ public class Login extends AppCompatActivity {
         });
 
     }
-
-
-/*
-    private int PasswordRequirements(String password) {
-        // Check if password has more than 8 characters
-        if (password.length() < 8) {
-            return 1;
-        }
-
-        // Check if password has at least one uppercase letter
-        if (!password.matches(".*[A-Z].*")) {
-            return 2;
-        }
-
-        // Check if password is alphanumeric
-        if (!password.matches("[a-zA-Z0-9]*")) {
-            return 3;
-        }
-
-        // Password meets all requirements
-        return 0;
-    }
-*/
 
     private static byte[] readEncryptionKeyFromFile(String filename) {
         try {
