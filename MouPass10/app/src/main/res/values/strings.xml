@@ -90,6 +90,8 @@
     <string name="dashd_username">Username</string>
     <string name="dashd_password">Password</string>
     <string name="dashd_website">Website</string>
+    <string name="dashd_update">UPDATE</string>
+    <string name="dashd_delete">DELETE</string>
 
 
 </resources>

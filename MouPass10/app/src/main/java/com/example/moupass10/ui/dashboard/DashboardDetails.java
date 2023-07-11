@@ -1,122 +1,282 @@
 package com.example.moupass10.ui.dashboard;
 
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Base64;
 import android.view.MenuItem;
-import android.widget.TextView;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
 
+import com.example.moupass10.CryptoUtils;
 import com.example.moupass10.MainActivity;
 import com.example.moupass10.R;
+import com.example.moupass10.databinding.ActivityMainBinding;
+import com.example.moupass10.ui.settings.ChangePassword;
+import com.google.android.material.button.MaterialButton;
+import com.google.android.material.textfield.TextInputLayout;
 
-import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
+import java.security.Key;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+import java.util.stream.Collectors;
 
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
 
 public class DashboardDetails extends AppCompatActivity {
 
-    private TextView txtTitle;
-    private TextView txtUser;
-    private TextView txtPass;
-    private TextView txtWebsite;
+    private TextInputLayout txtTitle, txtUser, txtPass, txtWebsite;
+    private MaterialButton btnUpdate,btnDelete;
+    private DataItem currentDataItem;
+    private Key secretKey;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard_details);
 
+        // Check "Login" SharedPreferences value
+        SharedPreferences sharedPreferences = getSharedPreferences("Login", Context.MODE_PRIVATE);
+        boolean isLoggedIn = sharedPreferences.getBoolean("isLoggedIn", false);
+
+        if (!isLoggedIn) {
+            finishAffinity();
+            System.exit(0);
+        }
+
+        //Fix white bar under screen
+        View decorView = getWindow().getDecorView();
+        int uiOptions = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_FULLSCREEN | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
+        decorView.setSystemUiVisibility(uiOptions);
+
+        //Toolbar
+        Toolbar formTool = (Toolbar) findViewById(R.id.ddToolbar);
+        setSupportActionBar(formTool);
+        getSupportActionBar().setDisplayShowTitleEnabled(true);
+        getSupportActionBar().setTitle("Details");
+
+        // Enable the Up button
+        ActionBar ab = getSupportActionBar();
+        if (ab != null) {
+            ab.setDisplayHomeAsUpEnabled(true);
+        }
+
         txtTitle = findViewById(R.id.txtTitle);
         txtUser = findViewById(R.id.txtUser);
         txtPass = findViewById(R.id.txtPass);
         txtWebsite = findViewById(R.id.txtWebsite);
+        btnUpdate = findViewById(R.id.btnUpdate);
+        btnDelete = findViewById(R.id.btnDelete);
 
-        // Retrieve data from "content.snf" file
-        String data = retrieveData();
+        Intent intent = getIntent();
+        currentDataItem = (DataItem) intent.getSerializableExtra("dataItem");
 
-        // Loading saved key
-        byte[] encryptionKey = loadKey();
+        txtTitle.getEditText().setText(currentDataItem.getTitle());
+        txtUser.getEditText().setText(currentDataItem.getUser());
+        txtPass.getEditText().setText(currentDataItem.getPass());
+        txtWebsite.getEditText().setText(currentDataItem.getWebsite());
 
-        // Split the data by commas to separate the values
-        String[] values = data.split(",");
-
- /*       // Convert Base64 strings to encrypted byte arrays
-        byte[] encryptedTitle = Base64.decode(values[1], Base64.DEFAULT);
-        byte[] encryptedUser = Base64.decode(values[2], Base64.DEFAULT);
-        byte[] encryptedPass = Base64.decode(values[3], Base64.DEFAULT);
-        byte[] encryptedWebsite = Base64.decode(values[4], Base64.DEFAULT);*/
-
-        //Toast.makeText(DashboardDetails.this, encryptedTitle.toString(), Toast.LENGTH_SHORT).show(); // - Test if "content.snf" is loaded (LOADED)
-
-        // Decrypt the values
-        String decryptedTitle = decrypt(values[1].getBytes(), encryptionKey);
-        String decryptedUser = decrypt(values[2].getBytes(), encryptionKey);
-        String decryptedPass = decrypt(values[3].getBytes(), encryptionKey);
-        String decryptedWebsite = decrypt(values[4].getBytes(), encryptionKey);
-
-        // Display the decrypted values in the TextViews
-        txtTitle.setText(decryptedTitle);
-        txtUser.setText(decryptedUser);
-        txtPass.setText(decryptedPass);
-        txtWebsite.setText(decryptedWebsite);
-
-    }
-
-    private String retrieveData() {
-        StringBuilder stringBuilder = new StringBuilder();
-        try {
-            File file = new File(getFilesDir(), "content2.snf");
-            FileInputStream fis = new FileInputStream(file);
-            InputStreamReader isr = new InputStreamReader(fis);
-            BufferedReader br = new BufferedReader(isr);
-
-            String line;
-            while ((line = br.readLine()) != null) {
-                stringBuilder.append(line);
-            }
-
-            br.close();
-            isr.close();
-            fis.close();
-        } catch (IOException e) {
-            e.printStackTrace();
+        secretKey = loadKey("k3y3.snf");
+        if (secretKey == null) {
+            throw new RuntimeException("Cannot load secret key");
         }
 
-        return stringBuilder.toString();
+        //Update Button
+        btnUpdate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                updateData(getApplicationContext());
+            }
+        });
+
+        //Delete Button
+        btnDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                deleteData(getApplicationContext());
+            }
+        });
     }
 
-    private String decrypt(byte[] encryptedContent, byte[] encryptionKey) {
+    public void updateData(Context context) {
+        List<DataItem> dataItems = new ArrayList<>();
+        FileInputStream fis = null;
         try {
-            SecretKeySpec keySpec = new SecretKeySpec(encryptionKey, "AES");
-            Cipher cipher = Cipher.getInstance("AES");
-            cipher.init(Cipher.DECRYPT_MODE, keySpec);
-            byte[] decryptedBytes = cipher.doFinal(encryptedContent);
-            return new String(decryptedBytes);
+            fis = context.openFileInput("Data.snf");
+            Scanner scanner = new Scanner(fis);
+            while (scanner.hasNextLine()) {
+                String encryptedString = scanner.nextLine();
+                byte[] decryptedBytes = CryptoUtils.doAES(Cipher.DECRYPT_MODE, secretKey, new byte[16], Base64.decode(encryptedString, Base64.DEFAULT));
+                String line = new String(decryptedBytes, StandardCharsets.UTF_8);
+                String[] parts = line.split(",");
+                dataItems.add(new DataItem(parts[0], parts[1], parts[2], parts[3]));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (fis != null) {
+                try {
+                    fis.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        // Update the current item
+        for (DataItem dataItem : dataItems) {
+            if (dataItem.getTitle().equals(currentDataItem.getTitle()) && dataItem.getUser().equals(currentDataItem.getUser())
+                    && dataItem.getWebsite().equals(currentDataItem.getWebsite())) {
+                dataItem.setTitle(txtTitle.getEditText().getText().toString());
+                dataItem.setUser(txtUser.getEditText().getText().toString());
+                dataItem.setPass(txtPass.getEditText().getText().toString());
+                dataItem.setWebsite(txtWebsite.getEditText().getText().toString());
+                break;
+            }
+        }
+
+        // Write all data items back to the file
+        FileOutputStream fos = null;
+        try {
+            fos = context.openFileOutput("Data.snf", Context.MODE_PRIVATE);
+            for (DataItem dataItem : dataItems) {
+                String data = dataItem.getTitle() + "," +
+                        dataItem.getUser() + "," +
+                        dataItem.getPass() + "," +
+                        dataItem.getWebsite() + "\n";
+                byte[] encryptedData = CryptoUtils.doAES(Cipher.ENCRYPT_MODE, secretKey, new byte[16], data.getBytes(StandardCharsets.UTF_8));
+                String encryptedString = Base64.encodeToString(encryptedData, Base64.DEFAULT);
+                fos.write(encryptedString.getBytes());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (fos != null) {
+                try {
+                    fos.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        startActivity(new Intent(DashboardDetails.this, MainActivity.class));
+        finish();
+    }
+
+    private Key loadKey(String fileName) {
+        try (FileInputStream fis = openFileInput(fileName)) {
+            byte[] keyBytes = new byte[fis.available()];
+            int read = fis.read(keyBytes);
+
+            if (read > 0) {
+                byte[] decodedKey = Base64.decode(new String(keyBytes), Base64.DEFAULT);
+                return new SecretKeySpec(decodedKey, 0, decodedKey.length, "AES");
+            }
+
         } catch (Exception e) {
             e.printStackTrace();
         }
+
         return null;
     }
 
-    private byte[] loadKey() {
-        try {
-            File file2 = new File(getFilesDir(), "k3y3.snf");
-            FileInputStream fis = new FileInputStream(file2);
-            InputStreamReader isr = new InputStreamReader(fis);
-            BufferedReader br = new BufferedReader(isr);
-            String base64EncryptionKey = br.readLine();
+    public void deleteData(Context context) {
+        new AlertDialog.Builder(this)
+                .setTitle("Delete Confirmation")
+                .setMessage("Are you sure you want to delete this item?")
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        // Continue with delete operation
+                        List<DataItem> dataItems = loadData(context);
 
-            return Base64.decode(base64EncryptionKey, Base64.DEFAULT);
-        } catch (IOException e) {
+                        // Remove the current item
+                        boolean isDeleted = dataItems.removeIf(dataItem -> dataItem.getTitle().equals(currentDataItem.getTitle())
+                                && dataItem.getUser().equals(currentDataItem.getUser())
+                                && dataItem.getWebsite().equals(currentDataItem.getWebsite()));
+
+                        // Write all remaining data items back to the file
+                        if (isDeleted) {
+                            writeData(context, dataItems);
+                            Toast.makeText(context, "Deleted", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(context, "Error: Item not found", Toast.LENGTH_SHORT).show();
+                        }
+
+                        startActivity(new Intent(DashboardDetails.this, MainActivity.class));
+                        finish();
+                    }
+                })
+                .setNegativeButton("No", null)
+                .show();
+    }
+
+    private List<DataItem> loadData(Context context) {
+        List<DataItem> dataItems = new ArrayList<>();
+        FileInputStream fis = null;
+        try {
+            fis = context.openFileInput("Data.snf");
+            Scanner scanner = new Scanner(fis);
+            while (scanner.hasNextLine()) {
+                String encryptedString = scanner.nextLine();
+                byte[] decryptedBytes = CryptoUtils.doAES(Cipher.DECRYPT_MODE, secretKey, new byte[16], Base64.decode(encryptedString, Base64.DEFAULT));
+                String line = new String(decryptedBytes, StandardCharsets.UTF_8);
+                String[] parts = line.split(",");
+                dataItems.add(new DataItem(parts[0], parts[1], parts[2], parts[3]));
+            }
+        } catch (Exception e) {
             e.printStackTrace();
+        } finally {
+            if (fis != null) {
+                try {
+                    fis.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
         }
-        return null;
+        return dataItems;
+    }
+
+    private void writeData(Context context, List<DataItem> dataItems) {
+        FileOutputStream fos = null;
+        try {
+            fos = context.openFileOutput("Data.snf", Context.MODE_PRIVATE);
+            for (DataItem dataItem : dataItems) {
+                String data = dataItem.getTitle() + "," +
+                        dataItem.getUser() + "," +
+                        dataItem.getPass() + "," +
+                        dataItem.getWebsite() + "\n";
+                byte[] encryptedData = CryptoUtils.doAES(Cipher.ENCRYPT_MODE, secretKey, new byte[16], data.getBytes(StandardCharsets.UTF_8));
+                String encryptedString = Base64.encodeToString(encryptedData, Base64.DEFAULT);
+                fos.write(encryptedString.getBytes());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (fos != null) {
+                try {
+                    fos.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
     }
 
     // Handling press on the Back button in Toolbar
@@ -131,5 +291,4 @@ public class DashboardDetails extends AppCompatActivity {
                 return super.onOptionsItemSelected(item);
         }
     }
-
 }

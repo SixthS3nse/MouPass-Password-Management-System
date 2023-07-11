@@ -1,6 +1,8 @@
 package com.example.moupass10.ui.dashboard;
 
-public class DataItem {
+import java.io.Serializable;
+
+public class DataItem implements Serializable {
     private String title;
     private String user;
     private String pass;

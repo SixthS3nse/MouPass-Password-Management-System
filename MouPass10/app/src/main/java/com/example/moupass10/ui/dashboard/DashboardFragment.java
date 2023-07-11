@@ -72,6 +72,7 @@ public class DashboardFragment extends Fragment {
         recyclerView = view.findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
+        //Load Stored Data
         secretKey = ((MainActivity) getActivity()).loadKey("k3y3.snf");
         if (secretKey != null) {
             loadData();
@@ -107,6 +108,14 @@ public class DashboardFragment extends Fragment {
                 }
             }
             dataItemAdapter = new DataItemAdapter(getActivity(),dataItems);
+            dataItemAdapter.setOnItemClickListener(new DataItemAdapter.OnItemClickListener() {
+                @Override
+                public void onItemClick(DataItem dataItem) {
+                    Intent intent = new Intent(getActivity(), DashboardDetails.class);
+                    intent.putExtra("dataItem", dataItem);
+                    startActivity(intent);
+                }
+            });
             recyclerView.setAdapter(dataItemAdapter);
         } catch (Exception e) {
             e.printStackTrace();

@@ -1,6 +1,8 @@
 package com.example.moupass10.ui.dashboard;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +20,12 @@ public class DataItemAdapter extends RecyclerView.Adapter<com.example.moupass10.
     private LayoutInflater mInflater;
     private Context context;
 
+    public interface OnItemClickListener {
+        void onItemClick(DataItem dataItem);
+    }
+
+    private OnItemClickListener listener;
+
     // data is passed into the constructor
     public DataItemAdapter(Context context, List<DataItem> data) {
         this.mInflater = LayoutInflater.from(context);
@@ -25,18 +33,33 @@ public class DataItemAdapter extends RecyclerView.Adapter<com.example.moupass10.
         this.context = context;
     }
 
+    public void setOnItemClickListener(OnItemClickListener listener) {
+        this.listener = listener;
+    }
+
     @Override
-    public com.example.moupass10.ui.dashboard.DataItemAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = mInflater.inflate(R.layout.item_list, parent, false);
         return new com.example.moupass10.ui.dashboard.DataItemAdapter.ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(com.example.moupass10.ui.dashboard.DataItemAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(DataItemAdapter.ViewHolder holder, @SuppressLint("RecyclerView") int position) {
+        DataItem item = dataItems.get(position);
         String title = dataItems.get(position).getTitle();
         String website = dataItems.get(position).getWebsite();
         holder.txtTitle.setText(title);
         holder.txtWebsite.setText(website);
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(context, DashboardDetails.class);
+                intent.putExtra("dataItem", item);
+                context.startActivity(intent);
+            }
+        });
+
     }
 
     @Override
