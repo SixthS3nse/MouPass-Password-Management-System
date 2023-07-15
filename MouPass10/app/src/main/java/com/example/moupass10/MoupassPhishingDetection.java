@@ -22,12 +22,15 @@ public class MoupassPhishingDetection extends Service {
 
     private WebView webView;
 
+/*
     @Override
     public void onCreate() {
         super.onCreate();
         startForegroundService();
         setupWebView();
     }
+*/
+
 
     private void startForegroundService() {
         createNotificationChannel();
@@ -68,10 +71,17 @@ public class MoupassPhishingDetection extends Service {
         webView.setWebViewClient(new WebViewClient() {
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                // Instead of loading link right away, the application will check it first
                 checkUrlSafety(url);
-                return false;
+                // Return true to indicate that we're handling the URL loading.
+                return true;
             }
         });
+    }
+
+    public void loadUrl(String url) {
+        // This method allows external components to ask the service to load a URL.
+        webView.loadUrl(url);
     }
 
     private void checkUrlSafety(String url) {
@@ -80,9 +90,10 @@ public class MoupassPhishingDetection extends Service {
             public void onSafeBrowsingComplete(String status) {
                 if (status.equals("safe")) {
                     showNotification("Safe", Color.GREEN);
-                } else if (status.equals("malicious")) {
-                    showNotification("Danger", Color.YELLOW);
-                } else if (status.equals("danger")) {
+                    // The URL is safe, so load it in the WebView.
+                    webView.loadUrl(url);
+                } else {
+                    // If the URL is not safe, show a notification and don't load the URL.
                     showNotification("Danger", Color.RED);
                 }
             }

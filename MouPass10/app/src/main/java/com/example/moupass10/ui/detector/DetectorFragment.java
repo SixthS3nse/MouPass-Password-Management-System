@@ -1,7 +1,6 @@
 package com.example.moupass10.ui.detector;
 
 import androidx.core.view.ViewCompat;
-import androidx.lifecycle.ViewModelProvider;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -9,20 +8,16 @@ import android.graphics.Color;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowInsets;
-import android.widget.EditText;
 import android.widget.TextView;
 
 import com.example.moupass10.R;
 import com.example.moupass10.databinding.FragmentDetectorBinding;
-import com.example.moupass10.databinding.FragmentGeneratorBinding;
-import com.example.moupass10.ui.generator.GeneratorViewModel;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputLayout;
 
@@ -32,6 +27,7 @@ public class DetectorFragment extends Fragment {
     TextView lblIndicator;
     MaterialButton btnCheck;
     TextView Result;
+
 
     private static final long GUESSES_PER_SECOND = 100_000_000_000L;
 

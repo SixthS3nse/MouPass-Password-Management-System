@@ -90,7 +90,7 @@ public class ChangePassword extends AppCompatActivity {
                             //byte[] encryptedConfirmPass = encrypt(confirmPass, encryptionKey);
 
                             // Save encrypted passwords to CSV file
-                            if (saveToCSV(getApplicationContext(), encryptedMasterPass)) {
+                            if (saveToSNF(getApplicationContext(), encryptedMasterPass)) {
                                 Toast.makeText(ChangePassword.this, "Password Changed", Toast.LENGTH_SHORT).show();
                             } else {
                                 Toast.makeText(ChangePassword.this, "⚠️Error saving password!⚠️", Toast.LENGTH_SHORT).show();
@@ -189,7 +189,7 @@ public class ChangePassword extends AppCompatActivity {
         return null;
     }
 
-    private boolean saveToCSV(Context context, byte[] encryptedMasterPass) {
+    private boolean saveToSNF(Context context, byte[] encryptedMasterPass) {
         try {
             // Convert encrypted passwords to Base64 strings
             String base64MasterPass = Base64.encodeToString(encryptedMasterPass, Base64.DEFAULT);

@@ -53,6 +53,7 @@ public class MainActivity extends AppCompatActivity {
         SharedPreferences sharedPreferences = getSharedPreferences("Login", Context.MODE_PRIVATE);
         boolean isLoggedIn = sharedPreferences.getBoolean("isLoggedIn", false);
 
+        // If user is not logged then exit application
         if (!isLoggedIn) {
             finishAffinity();
             System.exit(0);

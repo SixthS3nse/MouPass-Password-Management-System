@@ -48,10 +48,10 @@ public class ForgotPassword extends AppCompatActivity {
             public void onClick(View v) {
                 String path = getFilesDir().getPath();
                 // Read the encryption key from the key file
-                byte[] encryptionKey = readEncryptionKeyFromFile(path + "/k3y2.snf");
+                byte[] encryptionKey = readKeySNF(path + "/k3y2.snf");
 
                 // Read the encrypted content from the file
-                byte[] encryptedContent = readEncryptedContentFromFile(path + "/r3c0v3ry.snf");
+                byte[] encryptedContent = readPasswordSNF(path + "/r3c0v3ry.snf");
 
                 // Decrypt the content
                 byte[] decryptedContent = decrypt(encryptedContent, encryptionKey);
@@ -80,7 +80,7 @@ public class ForgotPassword extends AppCompatActivity {
     }
 
 
-    private static byte[] readEncryptionKeyFromFile(String filename) {
+    private static byte[] readKeySNF(String filename) {
         try {
             BufferedReader reader = new BufferedReader(new FileReader(filename));
             String base64Key = reader.readLine();
@@ -92,7 +92,7 @@ public class ForgotPassword extends AppCompatActivity {
         return null;
     }
 
-    private static byte[] readEncryptedContentFromFile (String filename){
+    private static byte[] readPasswordSNF (String filename){
         try {
             BufferedReader reader = new BufferedReader(new FileReader(filename));
             String base64Content = reader.readLine();

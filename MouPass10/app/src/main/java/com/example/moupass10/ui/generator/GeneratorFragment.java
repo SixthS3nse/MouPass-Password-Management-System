@@ -29,8 +29,6 @@ import android.widget.Toast;
 import com.example.moupass10.Login;
 import com.example.moupass10.R;
 import com.example.moupass10.databinding.FragmentGeneratorBinding;
-import com.example.moupass10.databinding.FragmentHomeBinding;
-import com.example.moupass10.ui.home.HomeViewModel;
 import com.google.android.material.button.MaterialButton;
 
 import java.util.Random;

@@ -83,7 +83,7 @@ public class Recovery extends AppCompatActivity {
         byte[] encryptedCode1 = encrypt(code1, encryptionKey);
 
         // Save encrypted passwords to CSV file
-        if (saveToCSV(getApplicationContext(), encryptedCode1)) {
+        if (saveToSNF(getApplicationContext(), encryptedCode1)) {
             //Toast.makeText(Recovery.this, "Code saved successfully.", Toast.LENGTH_SHORT).show();
         } else {
             Toast.makeText(Recovery.this, "Error saving Code!.", Toast.LENGTH_SHORT).show();
@@ -134,7 +134,7 @@ public class Recovery extends AppCompatActivity {
         return null;
     }
 
-    private boolean saveToCSV(Context context, byte[] encryptedCode1) {
+    private boolean saveToSNF(Context context, byte[] encryptedCode1) {
         try {
             // Convert encrypted passwords to Base64 strings
             String base64Code1 = Base64.encodeToString(encryptedCode1, Base64.DEFAULT);

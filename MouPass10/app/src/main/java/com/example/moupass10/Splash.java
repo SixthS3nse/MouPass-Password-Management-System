@@ -26,6 +26,7 @@ public class Splash extends AppCompatActivity {
         int uiOptions = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_FULLSCREEN | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
         decorView.setSystemUiVisibility(uiOptions);
 
+/*
         //Start MoupassPhishingDetection Service
         Intent intent = new Intent(this, MoupassPhishingDetection.class);
         intent.putExtra("url", "http://example.com");
@@ -34,7 +35,9 @@ public class Splash extends AppCompatActivity {
         } else {
             startService(intent);
         }
+*/
 
+        //Check if user is registered, else redirect register.
         SharedPreferences preferences = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
         boolean userRegistered = preferences.getBoolean(KEY_REGISTERED, false);
 

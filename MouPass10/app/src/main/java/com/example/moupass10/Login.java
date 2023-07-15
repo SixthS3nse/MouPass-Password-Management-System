@@ -15,6 +15,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputLayout;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.security.Key;
@@ -26,6 +27,8 @@ import javax.crypto.spec.SecretKeySpec;
 public class Login extends AppCompatActivity {
 
     private static final String ENCRYPTION_ALGORITHM = "AES";
+    private static final int MAX_ATTEMPTS = 3;
+    private SharedPreferences sharedPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +44,7 @@ public class Login extends AppCompatActivity {
         TextInputLayout txtMasterPass = (TextInputLayout) findViewById(R.id.txtMasterPass);
         FloatingActionButton info = (FloatingActionButton) findViewById(R.id.btnInfo);
         TextView forgot = (TextView) findViewById(R.id.lblForgotPass);
+        sharedPreferences = getSharedPreferences("LOGIN_ATTEMPTS", MODE_PRIVATE);
 
         String MasterPassword = txtMasterPass.getEditText().getText().toString();
 
@@ -53,11 +57,11 @@ public class Login extends AppCompatActivity {
             public void onClick(View v) {
                 // Read the encryption key from the key file
                 String keyFilePath = getFilesDir().getPath() + "/k3y.snf";
-                byte[] encryptionKey = readEncryptionKeyFromFile(keyFilePath);
+                byte[] encryptionKey = readKeySNF(keyFilePath);
 
                 // Read the encrypted content from the file
                 String contentFilePath = getFilesDir().getPath() + "/p@ssw0rds.snf";
-                byte[] encryptedContent = readEncryptedContentFromFile(contentFilePath);
+                byte[] encryptedContent = readPasswordSNF(contentFilePath);
 
                 // Decrypt the content
                 byte[] decryptedContent = decrypt(encryptedContent, encryptionKey);
@@ -72,12 +76,20 @@ public class Login extends AppCompatActivity {
                         Toast.makeText(Login.this, "Login Successful", Toast.LENGTH_SHORT).show();
                         //Save Login Session
                         LoginSession();
+                        //Reset Attempts
+                        sharedPreferences.edit().putInt("ATTEMPTS", 0).apply();
                         //Redirect to next page
                         startActivity(new Intent(Login.this, MainActivity.class));
                         finish();
                     } else {
-                        //Print Login Failed
-                        Toast.makeText(Login.this, "Login Failed", Toast.LENGTH_SHORT).show();
+                        int attempts = sharedPreferences.getInt("ATTEMPTS", 0) + 1;
+                        if(attempts > MAX_ATTEMPTS) {
+                            deleteUserData(); // delete user data if attempts >= MAX_ATTEMPTS
+                            Toast.makeText(Login.this, "Login Failed, Application Data has been wiped!", Toast.LENGTH_SHORT).show();
+                        } else {
+                            sharedPreferences.edit().putInt("ATTEMPTS", attempts).apply();
+                            Toast.makeText(Login.this, "Login Failed", Toast.LENGTH_SHORT).show();
+                        }
                     }
                 }
             }
@@ -101,7 +113,27 @@ public class Login extends AppCompatActivity {
 
     }
 
-    private static byte[] readEncryptionKeyFromFile(String filename) {
+    private void deleteUserData() {
+        // Delete all files in the app data directory
+        File dir = getFilesDir();
+        if (dir != null && dir.isDirectory()) {
+            String[] children = dir.list();
+            for (String aChildren : children) {
+                new File(dir, aChildren).delete();
+            }
+        }
+
+        // Delete all the SharedPreference files
+        File sharedPreferenceFile = new File(getFilesDir().getParent() + "/shared_prefs/");
+        String[] listFiles = sharedPreferenceFile.list();
+        if (listFiles != null) {
+            for (String file : listFiles) {
+                getSharedPreferences(file.replace(".xml", ""), MODE_PRIVATE).edit().clear().apply();
+            }
+        }
+    }
+
+    private static byte[] readKeySNF(String filename) {
         try {
             BufferedReader reader = new BufferedReader(new FileReader(filename));
             String base64Key = reader.readLine();
@@ -113,7 +145,7 @@ public class Login extends AppCompatActivity {
         return null;
     }
 
-    private static byte[] readEncryptedContentFromFile (String filename){
+    private static byte[] readPasswordSNF (String filename){
         try {
             BufferedReader reader = new BufferedReader(new FileReader(filename));
             String base64Content = reader.readLine();

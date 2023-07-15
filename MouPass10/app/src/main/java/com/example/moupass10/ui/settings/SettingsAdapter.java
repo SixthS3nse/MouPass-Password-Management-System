@@ -92,7 +92,7 @@ public class SettingsAdapter extends RecyclerView.Adapter<SettingsAdapter.ViewHo
                 builder.setPositiveButton("Delete", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        deleteFiles();
+                        deleteSNF();
                     }
                 });
 
@@ -144,7 +144,7 @@ public class SettingsAdapter extends RecyclerView.Adapter<SettingsAdapter.ViewHo
             for (File file : files) {
                 if (file.isFile() && (file.getName().equals("Data.snf") || file.getName().equals("k3y3.snf"))) {
                     try {
-                        exportFile(file, exportDirectory);
+                        exportSNF(file, exportDirectory);
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -157,15 +157,15 @@ public class SettingsAdapter extends RecyclerView.Adapter<SettingsAdapter.ViewHo
         }
     }
 
-    private void exportFile(File file, File exportDirectory) throws IOException {
+    private void exportSNF(File file, File exportDirectory) throws IOException {
         File destinationFile = new File(exportDirectory, file.getName());
-        copyExportFile(file, destinationFile);
+        copyExportSNF(file, destinationFile);
 
         // Scan the file to make it visible in the device's file system
         MediaScannerConnection.scanFile(context, new String[]{destinationFile.getAbsolutePath()}, null, null);
     }
 
-    private void copyExportFile(File sourceFile, File destFile) throws IOException {
+    private void copyExportSNF(File sourceFile, File destFile) throws IOException {
         if (!destFile.exists()) {
             destFile.createNewFile();
         }
@@ -212,7 +212,7 @@ public class SettingsAdapter extends RecyclerView.Adapter<SettingsAdapter.ViewHo
             for (File file : files) {
                 if (file.isFile() && (file.getName().equals("Data.snf") || file.getName().equals("k3y3.snf"))) {
                     try {
-                        importFile(file, importDirectory);
+                        importSNF(file, importDirectory);
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -225,14 +225,14 @@ public class SettingsAdapter extends RecyclerView.Adapter<SettingsAdapter.ViewHo
         }
     }
 
-    private void importFile(File file, File importDirectory) throws IOException {
+    private void importSNF(File file, File importDirectory) throws IOException {
         importDirectory = new File(context.getFilesDir().getAbsolutePath());
 
         File destinationFile = new File(importDirectory, file.getName());
-        copyImportFile(file, destinationFile);
+        copyImportSNF(file, destinationFile);
     }
 
-    private void copyImportFile(File sourceFile, File destFile) throws IOException {
+    private void copyImportSNF(File sourceFile, File destFile) throws IOException {
         if (!destFile.exists()) {
             destFile.createNewFile();
         }
@@ -254,7 +254,7 @@ public class SettingsAdapter extends RecyclerView.Adapter<SettingsAdapter.ViewHo
         }
     }
 
-    private void deleteFiles() {
+    private void deleteSNF() {
         try {
             File filesDirectory = context.getFilesDir();
             File contentFile = new File(filesDirectory, "Data.snf");

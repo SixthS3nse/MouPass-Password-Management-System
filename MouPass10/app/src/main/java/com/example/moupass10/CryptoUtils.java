@@ -16,6 +16,7 @@ public class CryptoUtils {
     private static final String AES = "AES";
     private static final String AES_CIPHER_ALGORITHM = "AES/CBC/PKCS7Padding";
 
+    //Generate Secret Key
     public static Key generateKey() throws GeneralSecurityException {
         SecureRandom secureRandom = new SecureRandom();
         KeyGenerator keyGenerator = KeyGenerator.getInstance(AES, new BouncyCastleProvider());
@@ -23,6 +24,7 @@ public class CryptoUtils {
         return keyGenerator.generateKey();
     }
 
+    //Data Encryption
     public static byte[] doAES(int encryptMode, Key secretKey, byte[] iv, byte[] bytes)
             throws GeneralSecurityException {
         Cipher cipher = Cipher.getInstance(AES_CIPHER_ALGORITHM, new BouncyCastleProvider());
