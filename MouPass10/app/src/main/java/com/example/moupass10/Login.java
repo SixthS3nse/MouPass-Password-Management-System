@@ -91,6 +91,10 @@ public class Login extends AppCompatActivity {
                             Toast.makeText(Login.this, "Login Failed", Toast.LENGTH_SHORT).show();
                         }
                     }
+                } else {
+                    Toast.makeText(Login.this, "File Corrupted, Kindly Restart Application", Toast.LENGTH_SHORT).show();
+                    deleteUserData();
+                    finish();
                 }
             }
         });

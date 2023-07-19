@@ -14,9 +14,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowInsets;
+import android.widget.Toast;
 
+import com.example.moupass10.Login;
 import com.example.moupass10.R;
 import com.example.moupass10.databinding.FragmentSettingsBinding;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -64,6 +67,8 @@ public class SettingsFragment extends Fragment {
         binding = FragmentSettingsBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
+        FloatingActionButton info = (FloatingActionButton) root.findViewById(R.id.btnInfo);
+
         // Create dummy settings options
         settingsOptions = new ArrayList<>();
         settingsOptions.add(new SettingsOption(R.drawable.baseline_password_maintheme_24, "Change Password"));
@@ -76,6 +81,14 @@ public class SettingsFragment extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         settingsAdapter = new SettingsAdapter(settingsOptions, getActivity());
         recyclerView.setAdapter(settingsAdapter);
+
+        //Information Button
+        info.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(getActivity(),"❗Store data files in download folder before import data❗",Toast.LENGTH_LONG).show();
+            }
+        });
 
         return root;
     }

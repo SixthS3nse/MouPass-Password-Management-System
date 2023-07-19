@@ -54,4 +54,10 @@ public class Splash extends AppCompatActivity {
             }
         },1000); // Improvement -50~100 Each Improvement
     }
+
+    // Handling Back button pressed
+    @Override
+    public void onBackPressed() {
+        finish();
+    }
 }

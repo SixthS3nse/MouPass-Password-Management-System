@@ -14,8 +14,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowInsets;
+import android.widget.Toast;
 
 import com.example.moupass10.CryptoUtils;
+import com.example.moupass10.Login;
 import com.example.moupass10.MainActivity;
 import com.example.moupass10.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -76,6 +78,8 @@ public class DashboardFragment extends Fragment {
         secretKey = ((MainActivity) getActivity()).loadKey("k3y3.snf");
         if (secretKey != null) {
             loadData();
+        } else {
+            //Toast.makeText(getActivity(), "Error Loading Key", Toast.LENGTH_SHORT).show();
         }
 
         //FAB - Add Button

@@ -15,6 +15,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputLayout;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.security.Key;
@@ -74,11 +75,13 @@ public class ForgotPassword extends AppCompatActivity {
                         //Print Login Failed
                         Toast.makeText(ForgotPassword.this, "Invalid recovery codes!", Toast.LENGTH_SHORT).show();
                     }
+                } else {
+                    Toast.makeText(ForgotPassword.this, "File Corrupted, Kindly Proceed with Password Login or Delete Application Data", Toast.LENGTH_LONG).show();
+                    finish();
                 }
             }
         });
     }
-
 
     private static byte[] readKeySNF(String filename) {
         try {
