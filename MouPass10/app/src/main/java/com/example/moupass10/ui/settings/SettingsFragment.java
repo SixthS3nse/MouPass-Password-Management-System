@@ -73,7 +73,6 @@ public class SettingsFragment extends Fragment {
         settingsOptions = new ArrayList<>();
         settingsOptions.add(new SettingsOption(R.drawable.baseline_password_maintheme_24, "Change Password"));
         settingsOptions.add(new SettingsOption(R.drawable.baseline_backup_24, "Export"));
-        settingsOptions.add(new SettingsOption(R.drawable.baseline_restore_24, "Import"));
         settingsOptions.add(new SettingsOption(R.drawable.baseline_delete_24, "Delete Data"));
 
         // Setup RecyclerView

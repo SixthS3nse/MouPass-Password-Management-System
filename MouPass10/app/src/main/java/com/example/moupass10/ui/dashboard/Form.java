@@ -89,7 +89,11 @@ public class Form extends AppCompatActivity {
         btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                saveData(getApplicationContext()); //or content or getActivity()
+                if(txtTitle.getEditText().getText().toString().isEmpty() || txtUser.getEditText().getText().toString().isEmpty() || txtPass.getEditText().getText().toString().isEmpty() || txtWebsite.getEditText().getText().toString().isEmpty()) {
+                    Toast.makeText(Form.this, "Kindly fill in all field", Toast.LENGTH_SHORT).show();
+                } else {
+                    saveData(getApplicationContext()); //or content or getActivity()
+                }
             }
         });
     }

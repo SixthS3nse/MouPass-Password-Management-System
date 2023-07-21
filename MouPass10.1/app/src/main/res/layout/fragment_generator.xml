@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp"
+    android:background="@color/bgBlack"
+    tools:context=".ui.generator.GeneratorFragment">
+
+    <TextView
+        android:id="@+id/lblCount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="50dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="10dp"
+        android:gravity="left"
+        android:inputType="text"
+        android:text="@string/gen_length"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        android:textSize="15sp"
+        />
+
+    <Spinner
+        android:id="@+id/lstLength"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        android:layout_toEndOf="@id/lblCount"
+        android:background="@drawable/border"
+        />
+
+    <CheckBox
+        android:id="@+id/chkDigits"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/lstLength"
+        android:layout_marginLeft="3dp"
+        android:text="@string/chk_digits"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        android:checked="true"
+        />
+
+    <CheckBox
+        android:id="@+id/chkUppercase"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/chkDigits"
+        android:text="@string/chk_upper"
+        android:layout_marginLeft="3dp"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        android:checked="true"
+        />
+
+    <CheckBox
+        android:id="@+id/chkLowercase"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/chkUppercase"
+        android:layout_marginLeft="3dp"
+        android:text="@string/chk_lower"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        android:checked="true"
+        />
+
+    <CheckBox
+        android:id="@+id/chkSymbols"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/chkLowercase"
+        android:layout_marginLeft="3dp"
+        android:text="@string/chk_symbol"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        android:checked="true"
+        />
+
+    <TextView
+        android:id="@+id/txtPassPhrase"
+        android:layout_width="250dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="10dp"
+        android:layout_below="@+id/chkSymbols"
+        android:background="@drawable/border"
+        android:textColor="@color/white"
+        android:inputType="textNoSuggestions"
+        android:gravity="center"
+        android:textStyle="bold"
+        android:textSize="15sp"
+        />
+
+    <TextView
+        android:id="@+id/btnRefresh"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:layout_below="@+id/chkSymbols"
+        android:layout_toEndOf="@+id/txtPassPhrase"
+        android:drawableStart="@drawable/baseline_autorenew_white_40"
+        android:clickable="true"
+        android:textColor="@color/white"
+        />
+
+    <com.google.android.material.button.MaterialButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/btnCopy"
+        android:layout_below="@+id/txtPassPhrase"
+        android:text="@string/gen_copy"
+        android:background="@drawable/ripple"
+        android:textColor="@color/black"
+        android:textStyle="bold"
+        android:backgroundTint="@color/txtBgGrey"
+        android:layout_centerHorizontal="true"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="10dp"
+        />
+
+
+</RelativeLayout>

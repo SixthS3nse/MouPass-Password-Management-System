@@ -118,7 +118,7 @@ public class ChangePassword extends AppCompatActivity {
                             break;
                     }
                 } else {
-                    Toast.makeText(ChangePassword.this, "Incorrect confirm password or no password in entered", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ChangePassword.this, "Incorrect confirm password or no password is entered", Toast.LENGTH_SHORT).show();
                 }
             }
         });

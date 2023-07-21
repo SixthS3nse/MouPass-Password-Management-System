@@ -1,9 +1,12 @@
 package com.example.moupass10;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.content.SharedPreferences;
 import com.google.android.material.button.MaterialButton;
@@ -17,10 +20,13 @@ import com.google.android.material.textfield.TextInputLayout;
 import android.os.Environment;
 import android.util.Base64;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.nio.channels.FileChannel;
 import java.security.SecureRandom;
+import java.util.HashMap;
 
 import javax.crypto.Cipher;
 import javax.crypto.KeyGenerator;
@@ -49,6 +55,7 @@ public class Register extends AppCompatActivity {
 
         txtMasterPass = findViewById(R.id.txtMasterPass);
         txtConfirmPass = findViewById(R.id.txtConfirmPass);
+        TextView imp = (TextView) findViewById(R.id.lblImport);
 
         MaterialButton register = (MaterialButton) findViewById(R.id.btnRegister);
         FloatingActionButton info = (FloatingActionButton) findViewById(R.id.btnInfo);
@@ -103,7 +110,7 @@ public class Register extends AppCompatActivity {
                             break;
                     }
                 } else {
-                    Toast.makeText(Register.this, "Incorrect confirm password or no password in entered", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(Register.this, "Incorrect confirm password or no password is entered", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -113,6 +120,30 @@ public class Register extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Toast.makeText(Register.this,"⚠️Stored data cannot be recovered the master password is lost⚠️",Toast.LENGTH_LONG).show();
+            }
+        });
+
+        //Import Data
+        imp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(Register.this);
+                builder.setTitle("Import Data");
+                builder.setMessage("Kindly make sure the data files are saved in download folder before importing the data");
+
+                // Add positive button with confirmation action
+                builder.setPositiveButton("Import", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        importFiles();
+                    }
+                });
+
+                // Add negative button to cancel Import
+                builder.setNegativeButton("Cancel", null);
+
+                AlertDialog dialog = builder.create();
+                dialog.show();
             }
         });
 
@@ -219,6 +250,90 @@ public class Register extends AppCompatActivity {
         SharedPreferences preferences = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
         SharedPreferences.Editor editor = preferences.edit();
         editor.putBoolean(KEY_REGISTERED, true);
+        editor.apply();
+    }
+
+    // Import Files - Files will be imported from Downloads folder
+    private void importFiles() {
+        File importDirectory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+
+        File[] files = importDirectory.listFiles();
+
+        HashMap<String, Boolean> fileFoundStatus = new HashMap<>();
+        String[] targetFiles = {"p@ssw0rds.snf", "k3y.snf", "r3c0v3ry.snf", "k3y2.snf", "k3y3.snf", "Data.snf"};
+
+        for (String targetFile : targetFiles) {
+            fileFoundStatus.put(targetFile, false);
+        }
+
+        if (files != null) {
+            for (File file : files) {
+                if (file.isFile()) {
+                    if (fileFoundStatus.containsKey(file.getName())) {
+                        fileFoundStatus.put(file.getName(), true);
+                    }
+                }
+            }
+        }
+
+        for (File file : files) {
+            if (file.isFile() && fileFoundStatus.containsKey(file.getName())) {
+                try {
+                    importSNF(file, importDirectory);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        for (String targetFile : targetFiles) {
+            if (!fileFoundStatus.get(targetFile)) {
+                Toast.makeText(this, "File " + targetFile + " Not Found", Toast.LENGTH_SHORT).show();
+            }
+        }
+
+        Toast.makeText(this, "Import Completed, Kindly Restart The Application", Toast.LENGTH_SHORT).show();
+        //Save Registration Status
+        saveRegistrationStatus();
+        //Save Login Status
+        LoginSession();
+        //End Activity
+        finish();
+    }
+
+    private void importSNF(File file, File importDirectory) throws IOException {
+        importDirectory = new File(this.getFilesDir().getAbsolutePath());
+
+        File destinationFile = new File(importDirectory, file.getName());
+        copyImportSNF(file, destinationFile);
+    }
+
+    private void copyImportSNF(File sourceFile, File destFile) throws IOException {
+        if (!destFile.exists()) {
+            destFile.createNewFile();
+        }
+
+        FileChannel source = null;
+        FileChannel destination = null;
+
+        try {
+            source = new FileInputStream(sourceFile).getChannel();
+            destination = new FileOutputStream(destFile).getChannel();
+            destination.transferFrom(source, 0, source.size());
+        } finally {
+            if (source != null) {
+                source.close();
+            }
+            if (destination != null) {
+                destination.close();
+            }
+        }
+    }
+
+    private void LoginSession() {
+        SharedPreferences sharedPreferences = getSharedPreferences("Login", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putBoolean("isLoggedIn", true);
         editor.apply();
     }
 }

@@ -1,0 +1,98 @@
+<resources>
+    <string name="app_name">MouPass1.0</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">MouPass</string>
+    <string name="nav_header_subtitle">ljkpubs0611@gmail.com</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="action_settings">Settings</string>
+
+    <!--Menu Strings-->
+    <string name="menu_home">Home</string>
+    <string name="menu_gallery">Gallery</string>
+    <string name="menu_slideshow">Slideshow</string>
+    <string name="menu_settings">Settings</string>
+    <string name="menu_generator">Passphrase Generator</string>
+    <string name="menu_detector">Passphrase Detector</string>
+    <string name="menu_form">Form</string>
+    <string name="menu_dash">Dashboard</string>
+
+    <string name="empty_list">NO DATA ON RECORD</string>
+
+    <!--Login/Register Strings-->
+    <string name="res_master">Master Password</string>
+    <string name="res_confirm">Confirm Password</string>
+    <string name="res_login">LOGIN</string>
+    <string name="res_register">REGISTER</string>
+    <string name="res_forgot">Forgot Password?</string>
+
+    <!--Form Strings-->
+    <string name="form_title">Title</string>
+    <string name="form_username">Username</string>
+    <string name="form_password">Password</string>
+    <string name="form_website">Website</string>
+    <string name="form_confirm">Confirm</string>
+
+
+    <!--Generator Strings-->
+    <string name="gen_copy">COPY</string>
+    <string name="gen_length">Password Length: </string>
+
+    <!--Detector Strings-->
+    <string name="det_userpass">Passphrase</string>
+    <string name="det_check">CHECK</string>
+    <string name="det_result">Estimate Time to Crack: </string>
+
+    <!--frmChangePass-->
+    <string name="cp_confirm">CONFIRM</string>
+
+    <!--Dropdown List-->
+    <string-array name="pass_lengths">
+        <item>10</item>
+        <item>12</item>
+        <item>14</item>
+        <item>16</item>
+        <item>18</item>
+        <item>20</item>
+    </string-array>
+
+    <!--Checkbox Strings-->
+    <string name="chk_digits">Include Digits</string>
+    <string name="chk_upper">Include Uppercase</string>
+    <string name="chk_lower">Include Lowercase</string>
+    <string name="chk_alphabet">Include Alphabet</string>
+    <string name="chk_symbol">Include Symbols</string>
+
+    <!--Settings Strings-->
+    <string name="set_changepass">Change Password</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_activity_settings">SettingsActivity</string>
+
+    <!-- Preference Titles -->
+    <string name="messages_header">Messages</string>
+    <string name="sync_header">Sync</string>
+
+    <!-- Messages Preferences -->
+    <string name="signature_title">Your signature</string>
+    <string name="reply_title">Default reply action</string>
+
+    <!-- Sync Preferences -->
+    <string name="sync_title">Sync email periodically</string>
+    <string name="attachment_title">Download incoming attachments</string>
+    <string name="attachment_summary_on">Automatically download attachments for incoming emails
+    </string>
+    <string name="attachment_summary_off">Only download attachments when manually requested</string>
+
+    <!--Dashboard Details Strings-->
+    <string name="dashd_title">Title</string>
+    <string name="dashd_username">Username</string>
+    <string name="dashd_password">Password</string>
+    <string name="dashd_website">Website</string>
+    <string name="dashd_redirect">OPEN BROWSER</string>
+    <string name="dashd_update">UPDATE</string>
+    <string name="dashd_delete">DELETE</string>
+
+
+</resources>

@@ -100,7 +100,11 @@ public class DashboardDetails extends AppCompatActivity {
         btnUpdate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                updateData(getApplicationContext());
+                if(txtTitle.getEditText().getText().toString().isEmpty() || txtUser.getEditText().getText().toString().isEmpty() || txtPass.getEditText().getText().toString().isEmpty() || txtWebsite.getEditText().getText().toString().isEmpty()) {
+                    Toast.makeText(DashboardDetails.this, "Kindly fill in all field", Toast.LENGTH_SHORT).show();
+                } else {
+                    updateData(getApplicationContext()); //or content or getActivity()
+                }
             }
         });
 
@@ -163,6 +167,7 @@ public class DashboardDetails extends AppCompatActivity {
                 String encryptedString = Base64.encodeToString(encryptedData, Base64.DEFAULT);
                 fos.write(encryptedString.getBytes());
             }
+            Toast.makeText(context, "Updated", Toast.LENGTH_SHORT).show();
         } catch (Exception e) {
             e.printStackTrace();
         } finally {

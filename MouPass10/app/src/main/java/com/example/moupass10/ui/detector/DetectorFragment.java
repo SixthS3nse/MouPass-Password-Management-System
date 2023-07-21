@@ -15,9 +15,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowInsets;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.moupass10.R;
 import com.example.moupass10.databinding.FragmentDetectorBinding;
+import com.example.moupass10.ui.dashboard.Form;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputLayout;
 
@@ -81,14 +83,18 @@ public class DetectorFragment extends Fragment {
                 //Estimated time to crack
                 long years = calculateYears(password);
 
-                Result.setText(years + " Years.");
-
-                if (years < 1) {
-                    Result.setTextColor(Color.RED);
-                } else if (years >= 1 && years <= 10) {
-                    Result.setTextColor(Color.YELLOW);
+                if (password.isEmpty()) {
+                    Toast.makeText(getActivity(), "Kindly enter passphrase", Toast.LENGTH_SHORT).show();
                 } else {
-                    Result.setTextColor(Color.GREEN);
+                    Result.setText(years + " Years.");
+
+                    if (years < 1) {
+                        Result.setTextColor(Color.RED);
+                    } else if (years >= 1 && years <= 10) {
+                        Result.setTextColor(Color.YELLOW);
+                    } else {
+                        Result.setTextColor(Color.GREEN);
+                    }
                 }
             }
         });

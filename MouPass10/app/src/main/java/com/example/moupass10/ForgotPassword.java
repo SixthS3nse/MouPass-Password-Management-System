@@ -42,7 +42,6 @@ public class ForgotPassword extends AppCompatActivity {
         txtCode1 = findViewById(R.id.txtRecoveryCode1);
 
         MaterialButton confirm = (MaterialButton) findViewById(R.id.btnConfirm);
-        FloatingActionButton info = (FloatingActionButton) findViewById(R.id.btnInfo);
 
         confirm.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -62,18 +61,22 @@ public class ForgotPassword extends AppCompatActivity {
                     String decryptedText = new String(decryptedContent);
 
                     // Perform login validation using the decrypted text // if else function
-                    if (txtCode1.getEditText().getText().toString().equals(decryptedText)) {
-                        // Codes match, display a success message
-                        Toast.makeText(ForgotPassword.this, "Account recovered successfully!", Toast.LENGTH_SHORT).show();
-
-                        //Save Login Session
-                        LoginSession();
-
-                        //Redirect to Next Page
-                        startActivity(new Intent(ForgotPassword.this, MainActivity.class));
+                    if (txtCode1.getEditText().getText().toString().isEmpty()) {
+                        Toast.makeText(ForgotPassword.this, "Please enter the recovery codes!", Toast.LENGTH_SHORT).show();
                     } else {
-                        //Print Login Failed
-                        Toast.makeText(ForgotPassword.this, "Invalid recovery codes!", Toast.LENGTH_SHORT).show();
+                        if (txtCode1.getEditText().getText().toString().equals(decryptedText)) {
+                            // Codes match, display a success message
+                            Toast.makeText(ForgotPassword.this, "Account recovered successfully!", Toast.LENGTH_SHORT).show();
+
+                            //Save Login Session
+                            LoginSession();
+
+                            //Redirect to Next Page
+                            startActivity(new Intent(ForgotPassword.this, MainActivity.class));
+                        } else {
+                            //Print Login Failed
+                            Toast.makeText(ForgotPassword.this, "Invalid recovery codes!", Toast.LENGTH_SHORT).show();
+                        }
                     }
                 } else {
                     Toast.makeText(ForgotPassword.this, "File Corrupted, Kindly Proceed with Password Login or Delete Application Data", Toast.LENGTH_LONG).show();

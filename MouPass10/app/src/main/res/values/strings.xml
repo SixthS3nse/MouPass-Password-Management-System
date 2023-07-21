@@ -25,6 +25,7 @@
     <string name="res_login">LOGIN</string>
     <string name="res_register">REGISTER</string>
     <string name="res_forgot">Forgot Password?</string>
+    <string name="res_import">Import Data?</string>
 
     <!--Form Strings-->
     <string name="form_title">Title</string>

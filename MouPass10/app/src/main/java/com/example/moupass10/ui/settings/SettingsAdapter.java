@@ -80,10 +80,7 @@ public class SettingsAdapter extends RecyclerView.Adapter<SettingsAdapter.ViewHo
             case 1: // Export/Backup
                 exportFiles();
                 break;
-            case 2: // Restore
-                importFiles();
-                break;
-            case 3: // Delete Data
+            case 2: // Delete Data
                 AlertDialog.Builder builder = new AlertDialog.Builder(context);
                 builder.setTitle("Confirm Deletion");
                 builder.setMessage("Are you sure you want to delete the files? This action cannot be undone.");
@@ -122,54 +119,26 @@ public class SettingsAdapter extends RecyclerView.Adapter<SettingsAdapter.ViewHo
     private void exportFiles() {
         File exportDirectory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
 
-        File sourceDirectory = new File(context.getFilesDir().getAbsolutePath());
-        File[] files = sourceDirectory.listFiles();
+        String[] targetFiles = {"p@ssw0rds.snf", "k3y.snf", "r3c0v3ry.snf", "k3y2.snf", "k3y3.snf", "Data.snf"};
 
-        boolean isContentSnfFound = false;
-        boolean isK3y3SnfFound = false;
-
-        if (files != null) {
-            for (File file : files) {
-                if (file.isFile()) {
-                    if (file.getName().equals("Data.snf")) {
-                        isContentSnfFound = true;
-                    } else if (file.getName().equals("k3y3.snf")) {
-                        isK3y3SnfFound = true;
-                    }
+        for (String targetFile : targetFiles) {
+            File fileToExport = new File(context.getFilesDir(), targetFile);
+            if (fileToExport.exists()) {
+                try {
+                    File destinationFile = new File(exportDirectory, fileToExport.getName());
+                    copyExportSNF(fileToExport, destinationFile);
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
+            } else {
+                Toast.makeText(context, "File " + targetFile + " Not Found", Toast.LENGTH_SHORT).show();
             }
         }
 
-        if (isContentSnfFound && isK3y3SnfFound) {
-            for (File file : files) {
-                if (file.isFile() && (file.getName().equals("Data.snf") || file.getName().equals("k3y3.snf"))) {
-                    try {
-                        exportSNF(file, exportDirectory);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-
-            Toast.makeText(context, "Files Exported", Toast.LENGTH_SHORT).show();
-        } else {
-            Toast.makeText(context, "File Not Found", Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    private void exportSNF(File file, File exportDirectory) throws IOException {
-        File destinationFile = new File(exportDirectory, file.getName());
-        copyExportSNF(file, destinationFile);
-
-        // Scan the file to make it visible in the device's file system
-        MediaScannerConnection.scanFile(context, new String[]{destinationFile.getAbsolutePath()}, null, null);
+        Toast.makeText(context, "Files Exported", Toast.LENGTH_SHORT).show();
     }
 
     private void copyExportSNF(File sourceFile, File destFile) throws IOException {
-        if (!destFile.exists()) {
-            destFile.createNewFile();
-        }
-
         FileChannel source = null;
         FileChannel destination = null;
 
@@ -186,74 +155,6 @@ public class SettingsAdapter extends RecyclerView.Adapter<SettingsAdapter.ViewHo
             }
         }
     }
-
-    // Import Files - Files will be imported from Downloads folder
-    private void importFiles() {
-        File importDirectory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
-
-        File[] files = importDirectory.listFiles();
-
-        boolean isContentSnfFound = false;
-        boolean isK3y3SnfFound = false;
-
-        if (files != null) {
-            for (File file : files) {
-                if (file.isFile()) {
-                    if (file.getName().equals("Data.snf")) {
-                        isContentSnfFound = true;
-                    } else if (file.getName().equals("k3y3.snf")) {
-                        isK3y3SnfFound = true;
-                    }
-                }
-            }
-        }
-
-        if (isContentSnfFound && isK3y3SnfFound) {
-            for (File file : files) {
-                if (file.isFile() && (file.getName().equals("Data.snf") || file.getName().equals("k3y3.snf"))) {
-                    try {
-                        importSNF(file, importDirectory);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-
-            Toast.makeText(context, "Files Imported", Toast.LENGTH_SHORT).show();
-        } else {
-            Toast.makeText(context, "File Not Found", Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    private void importSNF(File file, File importDirectory) throws IOException {
-        importDirectory = new File(context.getFilesDir().getAbsolutePath());
-
-        File destinationFile = new File(importDirectory, file.getName());
-        copyImportSNF(file, destinationFile);
-    }
-
-    private void copyImportSNF(File sourceFile, File destFile) throws IOException {
-        if (!destFile.exists()) {
-            destFile.createNewFile();
-        }
-
-        FileChannel source = null;
-        FileChannel destination = null;
-
-        try {
-            source = new FileInputStream(sourceFile).getChannel();
-            destination = new FileOutputStream(destFile).getChannel();
-            destination.transferFrom(source, 0, source.size());
-        } finally {
-            if (source != null) {
-                source.close();
-            }
-            if (destination != null) {
-                destination.close();
-            }
-        }
-    }
-
     private void deleteSNF() {
         try {
             File filesDirectory = context.getFilesDir();
