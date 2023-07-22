@@ -14,10 +14,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowInsets;
-import android.widget.Toast;
 
-import com.example.moupass10.CryptoUtils;
-import com.example.moupass10.Login;
+import com.example.moupass10.DataEncryption;
 import com.example.moupass10.MainActivity;
 import com.example.moupass10.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -103,7 +101,7 @@ public class DashboardFragment extends Fragment {
             dataItems = new ArrayList<>();
             while ((line = bufferedReader.readLine()) != null) {
                 byte[] decodedData = android.util.Base64.decode(line, android.util.Base64.DEFAULT);
-                byte[] decryptedData = CryptoUtils.doAES(Cipher.DECRYPT_MODE, secretKey, new byte[16], decodedData);
+                byte[] decryptedData = DataEncryption.doAES(Cipher.DECRYPT_MODE, secretKey, new byte[16], decodedData);
                 String decryptedString = new String(decryptedData, StandardCharsets.UTF_8);
                 String[] parts = decryptedString.split(",");
                 if (parts.length == 4) {

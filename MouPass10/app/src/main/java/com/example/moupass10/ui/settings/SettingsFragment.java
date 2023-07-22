@@ -81,14 +81,6 @@ public class SettingsFragment extends Fragment {
         settingsAdapter = new SettingsAdapter(settingsOptions, getActivity());
         recyclerView.setAdapter(settingsAdapter);
 
-        //Information Button
-        info.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(getActivity(),"❗Store data files in download folder before import data❗",Toast.LENGTH_LONG).show();
-            }
-        });
-
         return root;
     }
 

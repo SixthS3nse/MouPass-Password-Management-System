@@ -13,15 +13,11 @@ import android.os.Bundle;
 import android.util.Base64;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.Toast;
 
-import com.example.moupass10.CryptoUtils;
+import com.example.moupass10.DataEncryption;
 import com.example.moupass10.MainActivity;
 import com.example.moupass10.R;
-import com.example.moupass10.databinding.ActivityMainBinding;
-import com.example.moupass10.ui.settings.ChangePassword;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputLayout;
 
@@ -33,7 +29,6 @@ import java.security.Key;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
-import java.util.stream.Collectors;
 
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
@@ -125,7 +120,7 @@ public class DashboardDetails extends AppCompatActivity {
             Scanner scanner = new Scanner(fis);
             while (scanner.hasNextLine()) {
                 String encryptedString = scanner.nextLine();
-                byte[] decryptedBytes = CryptoUtils.doAES(Cipher.DECRYPT_MODE, secretKey, new byte[16], Base64.decode(encryptedString, Base64.DEFAULT));
+                byte[] decryptedBytes = DataEncryption.doAES(Cipher.DECRYPT_MODE, secretKey, new byte[16], Base64.decode(encryptedString, Base64.DEFAULT));
                 String line = new String(decryptedBytes, StandardCharsets.UTF_8);
                 String[] parts = line.split(",");
                 dataItems.add(new DataItem(parts[0], parts[1], parts[2], parts[3]));
@@ -162,8 +157,8 @@ public class DashboardDetails extends AppCompatActivity {
                 String data = dataItem.getTitle() + "," +
                         dataItem.getUser() + "," +
                         dataItem.getPass() + "," +
-                        dataItem.getWebsite() + "\n";
-                byte[] encryptedData = CryptoUtils.doAES(Cipher.ENCRYPT_MODE, secretKey, new byte[16], data.getBytes(StandardCharsets.UTF_8));
+                        dataItem.getWebsite();
+                byte[] encryptedData = DataEncryption.doAES(Cipher.ENCRYPT_MODE, secretKey, new byte[16], data.getBytes(StandardCharsets.UTF_8));
                 String encryptedString = Base64.encodeToString(encryptedData, Base64.DEFAULT);
                 fos.write(encryptedString.getBytes());
             }
@@ -239,7 +234,7 @@ public class DashboardDetails extends AppCompatActivity {
             Scanner scanner = new Scanner(fis);
             while (scanner.hasNextLine()) {
                 String encryptedString = scanner.nextLine();
-                byte[] decryptedBytes = CryptoUtils.doAES(Cipher.DECRYPT_MODE, secretKey, new byte[16], Base64.decode(encryptedString, Base64.DEFAULT));
+                byte[] decryptedBytes = DataEncryption.doAES(Cipher.DECRYPT_MODE, secretKey, new byte[16], Base64.decode(encryptedString, Base64.DEFAULT));
                 String line = new String(decryptedBytes, StandardCharsets.UTF_8);
                 String[] parts = line.split(",");
                 dataItems.add(new DataItem(parts[0], parts[1], parts[2], parts[3]));
@@ -266,8 +261,8 @@ public class DashboardDetails extends AppCompatActivity {
                 String data = dataItem.getTitle() + "," +
                         dataItem.getUser() + "," +
                         dataItem.getPass() + "," +
-                        dataItem.getWebsite() + "\n";
-                byte[] encryptedData = CryptoUtils.doAES(Cipher.ENCRYPT_MODE, secretKey, new byte[16], data.getBytes(StandardCharsets.UTF_8));
+                        dataItem.getWebsite();
+                byte[] encryptedData = DataEncryption.doAES(Cipher.ENCRYPT_MODE, secretKey, new byte[16], data.getBytes(StandardCharsets.UTF_8));
                 String encryptedString = Base64.encodeToString(encryptedData, Base64.DEFAULT);
                 fos.write(encryptedString.getBytes());
             }
